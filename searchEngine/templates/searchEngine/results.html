@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Resultados{% endblock %}
+
+{% block content %}
+<ul>
+    {% for game in page_obj %}
+    <a href="{% url 'details' game_id=game.id %}">
+        <li>{{game.name}}</li>
+    </a>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock  %}
