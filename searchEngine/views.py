@@ -31,6 +31,9 @@ class BaseView(View):
         self.collection = env['COLLECTION']
         self.apiKey = env['MONGO_API_KEY']
 
+        self.externalApiKey = env["RAWG_API_KEY"]
+        self.externalApiUrl = env["RAWG_API_URL"]
+
     def get_game(self, input):
         games = self.redis_search(input)
 
@@ -86,7 +89,7 @@ class SearchEngineView(BaseView):
 
 
 class ResultsListView(BaseView, ListView):
-    paginate_by = 40
+    paginate_by = 30
 
     template_name = "searchEngine/results.html"
 
@@ -117,4 +120,8 @@ class ResultsListView(BaseView, ListView):
 class ResultDetailView(BaseView, DetailView):
     def get(self, request, game_id):
         game_id = int(game_id)
-        return HttpResponse(f"Game details for game with id {game_id}")
+        url = f"{self.externalApiUrl}/{game_id}?key={self.externalApiKey}"
+
+        game_details = self.client.get(url).json()
+
+        return render(request, "searchEngine/details.html", {"game": game_details})
