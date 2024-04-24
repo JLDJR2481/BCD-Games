@@ -1,16 +1,49 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+<nav class="navbar navbar-expand-sm navbar-light bg-body-tertiary">
     <div class="container-fluid">
-        <div style="width: 10%; height: auto;">
-            <img src="{% static 'images/logotipo-without-background.png' %}" style="width: 50%; height:auto;">
+        <div class="row w-100 align-items-center">
+            <div class="col-2 d-flex align-items-center">
+                <img src="{% static 'images/logotipo-without-background.png' %}" style="width: 50%; height:auto;">
+            </div>
+
+            <div class="col-8">
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'searchEngine' %}">Buscar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-2 d-flex justify-content-end align-items-center">
+                <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser"
+                    aria-controls="offcanvasUser">
+                    <img src="{% static 'images/logotipo.png' %}" alt="User Logo"
+                        style="width: 30px; height: 30px; border-radius: 50%;">
+                </button>
+            </div>
         </div>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'searchEngine' %}">Buscar</a>
-        </div>
+    </div>
 </nav>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasUserLabel">Usuario</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="list-unstyled">
+            <li><a class="dropdown-item" href="#">Perfil</a></li>
+            <li><a class="dropdown-item" href="#">Configuración</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>

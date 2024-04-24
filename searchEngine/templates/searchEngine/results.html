@@ -2,28 +2,51 @@
 {% block title %}Resultados{% endblock %}
 
 {% block content %}
-<ul>
-    {% for game in page_obj %}
-    <a href="{% url 'details' game_id=game.id %}">
-        <li>{{game.name}}</li>
-    </a>
-    {% endfor %}
-</ul>
-<div class="pagination">
-    <span class="step-links">
+<div class="container">
+    <div class="row">
+        {% for game in page_obj %}
+        <div class="col-md-4">
+            <div class="card mb-4 rounded">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ game.name }}</h5>
+                    <a href="{% url 'details' game_id=game.id %}" class="btn btn-primary">Ver detalles</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&lsaquo;</span>
+            </a>
+        </li>
         {% endif %}
 
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
+        <li class="page-item disabled">
+            <a class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</a>
+        </li>
 
         {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">next</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&rsaquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
         {% endif %}
-    </span>
-</div>
+    </ul>
+</nav>
 {% endblock  %}
