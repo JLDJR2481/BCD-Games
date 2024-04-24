@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import RootView
 
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('admin/', admin.site.urls),
+    path('', RootView.as_view(), name='home'),
     path('search/', include('searchEngine.urls')),
 ]
