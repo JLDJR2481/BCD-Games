@@ -1,7 +1,5 @@
 from redis import Redis
-# from pymongo import MongoClient
 import dotenv
-import time
 import httpx
 
 # Carga de variables del sistema
@@ -74,11 +72,3 @@ def redis_search(input):
 
 def store_cache_redis(games):
     redis.zadd('games', {game: 0 for game in games})
-
-
-if __name__ == "__main__":
-
-    start_time = time.time()
-    get_game('Cou')
-    end_time = time.time()
-    print(f"Tiempo total de ejecución: {end_time - start_time} segundos.")
