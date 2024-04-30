@@ -12,13 +12,16 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
 
+
     <link rel="icon" type="image/svg+xml" href="{% static 'images/logotipo.svg' %}">
 
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <title>{% block title %}{% endblock title %}</title>
 </head>
 
-<body>
+<body id="light">
     {% include "navbar.html" %}
     {% block content %}{% endblock content%}
+    <script src="{% static 'js/darkMode.js' %}"></script>
 </body>
