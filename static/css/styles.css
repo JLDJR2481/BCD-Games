@@ -1,0 +1,134 @@
+#dark {
+  transition: all 0.75s ease-in-out;
+  background-color: #1a1a1a;
+  color: #ffffff;
+
+  nav:not(#paginator) {
+    transition: all 0.75s ease-in-out;
+    background-color: #404040;
+    #navbarNav .nav-link {
+      color: #ffffff;
+    }
+  }
+
+  nav .page-link {
+    transition: all 0.75s ease-in-out;
+    background-color: #404040;
+    color: #ffffff;
+    span {
+      color: #ffffff;
+    }
+  }
+
+  button.accordion-button {
+    transition: all 0.75s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
+
+  div.accordion-item {
+    transition: all 0.75s ease-in-out;
+    background-color: #404040;
+    color: #ffffff;
+  }
+
+  #offcanvasUser {
+    background-color: #292929;
+    color: #ffffff;
+
+    a.dropdown-item {
+      color: #ffffff;
+    }
+    a.dropdown-item:hover,
+    a.dropdown-item:focus,
+    a.dropdown-item:active {
+      background-color: #292929;
+    }
+  }
+}
+#light {
+  transition: all 0.75s ease-in-out;
+  background-color: #f2f2f2;
+  color: #000000;
+
+  nav:not(#paginator) {
+    transition: all 0.75s ease-in-out;
+    background-color: #e8e8e8;
+    #navbarNav .nav-link {
+      color: #000000;
+    }
+  }
+
+  nav .page-link {
+    transition: all 0.75s ease-in-out;
+    background-color: #e8e8e8;
+    color: #000000;
+    span {
+      color: #000000;
+    }
+  }
+
+  button.accordion-button {
+    transition: all 0.75s ease-in-out;
+    background-color: #e8e8e8;
+    color: #000000;
+  }
+
+  div.accordion-item {
+    transition: all 0.75s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+    border: solid 1px #000000;
+  }
+
+  #offcanvasUser {
+    background-color: #e8e8e8;
+
+    a.dropdown-item {
+      color: #000000;
+    }
+
+    a.dropdown-item:hover,
+    a.dropdown-item:focus,
+    a.dropdown-item:active {
+      background-color: #e8e8e8;
+    }
+  }
+}
+
+nav {
+  #navbarNav .nav-link {
+    font-size: 1.2em;
+  }
+}
+
+.alert.alert-info {
+  background-color: #ff6666;
+  color: #ffffff;
+}
+
+.accordion-button::after {
+  display: none;
+}
+
+.game-result-container {
+  background-color: #ffcc00;
+  color: #1a1a1a;
+  a,
+  a:hover {
+    background-color: #ff6666;
+    border-color: #ff6666;
+  }
+}
+
+h2.accordion-header > button {
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+}
+
+#darkModeToggle:focus,
+.accordion-button:focus,
+#canvasButton:focus {
+  box-shadow: 0 0 0 0;
+}
