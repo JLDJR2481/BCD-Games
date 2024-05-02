@@ -31,9 +31,15 @@
                 </button>
                 <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser"
                     aria-controls="offcanvasUser" id="canvasButton">
-                    <img src="{% static 'images/logotipo.png' %}" alt="User Logo"
+                    {% if user.is_authenticated %}
+                    <img src="" alt="User Logo"
                         style="width: 50px; height: 50px; border-radius: 50%;border: 2px solid white;">
                 </button>
+                {% else %}
+                <img src="{% static 'images/logotipo.png' %}" alt="User Logo"
+                    style="width: 50px; height: 50px; border-radius: 50%;border: 2px solid white;">
+                </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -41,7 +47,11 @@
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasUserLabel">Usuario</h5>
+        {% if user.is_authenticated %}
+        <h5 class="offcanvas-title" id="offcanvasUserLabel">{{user.username}}</h5>
+        {% else %}
+        <h5 class="offcanvas-title" id="offcanvasUserLabel">Usuario no logueado</h5>
+        {% endif %}
         <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
