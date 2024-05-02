@@ -5,6 +5,7 @@ from django.views.generic.detail import DetailView
 from django.utils.translation import get_language
 from django.contrib import messages
 from .models import Game
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from operator import itemgetter
 
@@ -55,9 +56,12 @@ class BaseView(View):
             pipe.execute()
 
 
-class SearchEngineView(BaseView):
+class SearchEngineView(LoginRequiredMixin, BaseView):
+    login_url = '/login/'
+
     def get(self, request):
-        return render(request, "searchEngine/index.html")
+        searched_games = request.session.get("searched_games", None)
+        return render(request, "searchEngine/index.html", {"searched_games": searched_games})
 
 
 class ResultsListView(BaseView, ListView):
@@ -101,6 +105,13 @@ class ResultDetailView(BaseView, DetailView):
         input_game_id = int(game_id)
 
         game = Game.objects.filter(id=input_game_id).values().first()
+
+        searched_games = request.session.get("searched_games", [])
+
+        if not any(game.get("id") == searched_game.get("id") for searched_game in searched_games):
+            searched_games.append({"id": game["id"], "name": game["name"]})
+
+        request.session["searched_games"] = searched_games
 
         if get_language() == "es-es":
             description = game.get("translated_description_es")
