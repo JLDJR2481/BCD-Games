@@ -45,6 +45,17 @@
       background-color: #292929;
     }
   }
+
+  .search-box input {
+    transition: all 0.75s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
+  #login-card {
+    transition: all 0.75s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
 }
 #light {
   transition: all 0.75s ease-in-out;
@@ -94,6 +105,17 @@
       background-color: #e8e8e8;
     }
   }
+  .search-box input {
+    transition: all 0.75s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+
+  #login-card {
+    transition: all 0.75s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+  }
 }
 
 nav {
@@ -105,6 +127,7 @@ nav {
 .alert.alert-info {
   background-color: #ff6666;
   color: #ffffff;
+  border: solid 1px #ff6666;
 }
 
 .accordion-button::after {
@@ -112,23 +135,63 @@ nav {
 }
 
 .game-result-container {
-  background-color: #ffcc00;
+  background-color: #bac78c;
   color: #1a1a1a;
+
   a,
   a:hover {
-    background-color: #ff6666;
-    border-color: #ff6666;
+    background-color: #5a7c7d;
+    border-color: #5a7c7d;
   }
 }
 
 h2.accordion-header > button {
   font-weight: bolder;
-  display: flex;
-  justify-content: center;
 }
 
 #darkModeToggle:focus,
 .accordion-button:focus,
 #canvasButton:focus {
   box-shadow: 0 0 0 0;
+}
+
+.search-box {
+  position: relative;
+  margin: 20px auto;
+  width: 50%;
+  max-width: 500px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  background-color: #5a7c7d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-box button:hover {
+  background-color: #5a7c7d;
+}
+
+.login-button {
+  background-color: #5a7c7d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
