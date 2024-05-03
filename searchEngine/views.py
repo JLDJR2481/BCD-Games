@@ -56,7 +56,7 @@ class BaseView(View):
             pipe.execute()
 
 
-class SearchEngineView(LoginRequiredMixin, BaseView):
+class SearchEngineView(BaseView):
     login_url = '/login/'
 
     def get(self, request):
