@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
+from searchEngine.models import CustomUser
 
 
 class UserLoginForm(forms.Form):
@@ -28,20 +29,39 @@ class UserLoginForm(forms.Form):
         return self.user_cache
 
 
-class UserRegisterForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super(UserRegisterForm, self).__init__(*args, **kwargs)
-    first_name = forms.CharField(label="First Name", max_length=30)
-    email = forms.EmailField(label="Email")
-    username = forms.CharField(label="Username", max_length=18)
-    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+class UserRegisterForm(forms.ModelForm):
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
     password2 = forms.CharField(
-        label="Confirm Password", widget=forms.PasswordInput)
+        label="Confirmar contraseña", widget=forms.PasswordInput)
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email']
+        labels = {
+            'username': 'Usuario',
+            'email': 'Email',
+        }
+
+    def clean_password2(self):
+        password = self.cleaned_data.get("password")
+        password2 = self.cleaned_data.get("password2")
+        if password and password2 and password != password2:
+            raise forms.ValidationError("Las contraseñas no coinciden")
+        return password2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 
-class UserAvatarForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super(UserAvatarForm, self).__init__(*args, **kwargs)
-    profile_avatar = forms.ImageField(label="Profile Avatar")
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'profile_avatar']
+        labels = {
+            'username': 'Usuario',
+            'profile_avatar': 'Avatar',
+        }

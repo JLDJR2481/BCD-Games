@@ -7,8 +7,18 @@
                 <img src="{% static 'images/logotipo-without-background.png' %}" class="img-fluid" id="logo"
                     style="width: 75%; height: auto;">
             </div>
+            <div class="col-8 d-flex align-items-center">
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-            <div class="col-10 d-flex justify-content-end">
+
+            <div class=" col-2 d-flex justify-content-end">
                 <button id="darkModeToggle" class="btn" type="button" onclick="darkModeToggle()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
                         class="bi bi-moon" viewBox="0 0 16 16">

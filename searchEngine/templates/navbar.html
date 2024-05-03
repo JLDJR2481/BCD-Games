@@ -15,7 +15,13 @@
                             <a class="nav-link" href="{% url 'home' %}">Inicio</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="#">Blogs</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'searchEngine' %}">Buscar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Juego BCD-Games</a>
                         </li>
                     </ul>
                 </div>
@@ -29,39 +35,42 @@
                             d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286" />
                     </svg>
                 </button>
+                {% if user.is_authenticated %}
                 <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser"
                     aria-controls="offcanvasUser" id="canvasButton">
-                    {% if user.is_authenticated %}
-                    <img src="" alt="User Logo"
+                    {% if user.profile_avatar %}
+                    <img src="{{user.profile_avatar.url}}" alt="User Logo"
+                        style="width: 50px; height: 50px; border-radius: 50% ;border: 2px solid white;">
+                    {% else %}
+                    <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
                         style="width: 50px; height: 50px; border-radius: 50%;border: 2px solid white;">
+                    {% endif %}
                 </button>
                 {% else %}
-                <img src="{% static 'images/logotipo.png' %}" alt="User Logo"
-                    style="width: 50px; height: 50px; border-radius: 50%;border: 2px solid white;">
-                </button>
+                <a class="btn" href="{% url 'login' %}" role="button" id="login-button" style="align-content: center;"">Iniciar sesión</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </nav>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
-    <div class="offcanvas-header">
-        {% if user.is_authenticated %}
-        <h5 class="offcanvas-title" id="offcanvasUserLabel">{{user.username}}</h5>
-        {% else %}
-        <h5 class="offcanvas-title" id="offcanvasUserLabel">Usuario no logueado</h5>
-        {% endif %}
-        <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <ul class="list-unstyled">
-            <li><a class="dropdown-item" href="#">Perfil</a></li>
-            <li><a class="dropdown-item" href="#">Configuración</a></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
-        </ul>
-    </div>
-</div>
+<div class=" offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
+                    <div class="offcanvas-header">
+                        {% if user.is_authenticated %}
+                        <h5 class="offcanvas-title" id="offcanvasUserLabel">{{user.username}}</h5>
+                        {% endif %}
+                        <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="list-unstyled">
+                            <li><a class="dropdown-item" href="{% url 'update-profile' %}">Editar Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <form method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <input type="submit" class="dropdown-item" value="Cerrar sesión">
+                            </form>
+                        </ul>
+                    </div>
+            </div>
