@@ -1,0 +1,77 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Post{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar-post.html" %}
+{% endblock navbar %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center">
+            {% if author.profile_avatar %}
+            <img src="{{ author.profile_avatar.url }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
+            {% endif %}
+            <p class="mt-5">Escrito por {{ author.username }}</p>
+
+            <p class="text-muted mt-5">Publicado hace {{ post.publication_date|timesince }}
+            </p>
+            {% if post.visual_content %}
+            <img src="{{ post.visual_content.url }}" class="img-fluid mx-auto d-block" alt="Post Image" width="50%" />
+            {% endif %}
+            <h2 class="mt-5">{{ post.title }}</h2>
+            <p class="mt-4">{{ post.content }}</p>
+        </div>
+
+        <div class="col-12 mt-5">
+            <h3>Comentarios</h3>
+            <div class="row mt-5">
+                <div class="col-12">
+                    {% for comment in comments %}
+                    <div class="row">
+                        <div class="col-2 d-flex flex-column justify-content-center align-items-center">
+                            <p style="font-size: 12px; margin-bottom: 10px;">{{ comment.user.username }}</p>
+                            <img src="{{ comment.user.profile_avatar.url }}" alt="User Logo"
+                                style="width: 50px; height: 50px; border-radius: 50%; margin-bottom:10px;"
+                                id="profileAvatar">
+                            <p style="font-size: 12px;">{{ comment.comment_date|timesince }}</p>
+                        </div>
+                        <div class="col-10 d-flex justify-content-center flex-column">
+                            <p>{{ comment.content }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class=" row mt-4">
+                        <div class="col-12">
+                            {% if user.is_authenticated %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                                        <label for="comment">
+                                            <img src="{{user.profile_avatar.url}}" alt="User Logo"
+                                                style="width: 50px; height: 50px; border-radius: 50%;"
+                                                id="profileAvatar">
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-8 d-flex justify-content-center align-items-center">
+                                        <textarea class="form-control" id="comment" name="comment" rows="1"></textarea>
+                                    </div>
+                                    <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                                        <button type="submit" class="btn btn-primary">Comentar</button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% else %}
+                            <p>Para comentar, <a href="{% url 'login' %}">inicia sesión</a></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

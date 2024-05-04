@@ -5,7 +5,6 @@ from django.views.generic.detail import DetailView
 from django.utils.translation import get_language
 from django.contrib import messages
 from .models import Game
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from operator import itemgetter
 

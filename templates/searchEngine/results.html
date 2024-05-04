@@ -1,0 +1,55 @@
+{% extends "base/base.html" %}
+{% block title %}Resultados{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar.html" %}
+{% endblock navbar %}
+<div class="container">
+    <div class="row">
+        {% for game in page_obj %}
+        <div class="col-md-4">
+            <div class="card mb-4 rounded">
+                <div class="card-body text-center d-flex flex-column justify-content-center game-result-container">
+                    <h5 class="card-title align-self-center" style="min-height: 75px;">{{ game.name }}</h5>
+                    <a href="{% url 'details' game_id=game.id %}" class="btn btn-primary">Ver detalles</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<nav aria-label="Page navigation" id="paginator">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&lsaquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <a class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&rsaquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock  %}

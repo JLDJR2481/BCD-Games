@@ -26,7 +26,11 @@ class UserLoginView(LoginView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy("home")
+        next_url = self.request.GET.get("next")
+        if next_url:
+            return next_url
+        else:
+            return reverse_lazy("home")
 
 
 class UserLogoutView(LogoutView):

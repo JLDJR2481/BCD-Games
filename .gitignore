@@ -5,3 +5,5 @@ venv
 json/
 
 __pycache__/
+
+media/

@@ -25,7 +25,13 @@ class Game(models.Model):
     publishers = models.JSONField()
     esbr_ratings = models.JSONField()
 
+    def __str__(self):
+        return self.name
+
 
 class CustomUser(AbstractUser):
     profile_avatar = models.ImageField(
         upload_to="avatars/", null=True, blank=True)
+
+    def __str__(self):
+        return self.username

@@ -69,6 +69,11 @@
   #login-button:active {
     box-shadow: none;
   }
+
+  #profileAvatar {
+    transition: all 0.75s ease-in-out;
+    border: 2px solid white;
+  }
 }
 #light {
   transition: all 0.75s ease-in-out;
@@ -141,6 +146,11 @@
     background-color: #f2f2f2;
     color: #000000;
   }
+
+  #profileAvatar {
+    transition: all 0.75s ease-in-out;
+    border: 2px solid black;
+  }
 }
 
 nav {
@@ -159,6 +169,7 @@ nav {
   display: none;
 }
 
+.post-result-container,
 .game-result-container {
   background-color: #bac78c;
   color: #1a1a1a;
@@ -235,4 +246,8 @@ p input {
 
 p span {
   font-size: 0.8em;
+}
+
+.nav-item.active {
+  font-weight: bolder;
 }
