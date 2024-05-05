@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Game(models.Model):
     game_id = models.IntegerField()
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, db_index=True)
     description = models.TextField()
     translated_description_es = models.TextField()
     metacritic = models.IntegerField(null=True)

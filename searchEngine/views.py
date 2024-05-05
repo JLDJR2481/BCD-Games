@@ -56,7 +56,6 @@ class BaseView(View):
 
 
 class SearchEngineView(BaseView):
-    login_url = '/login/'
 
     def get(self, request):
         searched_games = request.session.get("searched_games", None)
