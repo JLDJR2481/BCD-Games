@@ -7,6 +7,7 @@ class Post(models.Model):
     content = models.TextField()
     visual_content = models.ImageField(upload_to="visual_content/")
     publication_date = models.DateTimeField(auto_now_add=True)
+    last_update_date = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 

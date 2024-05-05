@@ -4,17 +4,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Comment, Like
 from searchEngine.models import CustomUser
 from django.views import View
+from searchEngine.models import Game
+from django.http import JsonResponse
+
+
+def search(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        consulta = request.GET.get("term")
+        games = Game.objects.filter(
+            name__startswith=consulta).values_list('name', flat=True)
+        resultados = [game for game in games]
+        return JsonResponse(resultados, safe=False)
+    return JsonResponse({}, safe=False)
 
 
 class HomeBlogView(ListView):
     model = Post
     paginate_by = 10
-    template_name = "blog/home.html"
+    template_name = "posts/home.html"
 
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = "blog/post-details.html"
+    template_name = "posts/post-details.html"
 
     def get(self, request, post_id):
         post = Post.objects.get(id=post_id)
@@ -44,7 +56,10 @@ class PostDetailView(DetailView):
             }
             likes_data.append(like_data)
 
-        user_has_liked = post.user_has_liked(request.user)
+        if request.user.is_authenticated:
+            user_has_liked = post.user_has_liked(request.user)
+        else:
+            user_has_liked = False
 
         likes_count = post.count_likes()
         comments_count = post.count_comments()
@@ -57,11 +72,13 @@ class PostDetailView(DetailView):
             "user_has_liked": user_has_liked,
             "likes_count": likes_count,
             "comments_count": comments_count,
-
         })
 
 
 class PostLike(LoginRequiredMixin, View):
+    def get(self, request, post_id):
+        return redirect('post-details', post_id=post_id)
+
     def post(self, request, post_id):
         post = Post.objects.get(id=post_id)
         user = request.user
@@ -74,3 +91,94 @@ class PostLike(LoginRequiredMixin, View):
             like.save()
 
         return redirect('post-details', post_id=post_id)
+
+
+class PostComment(LoginRequiredMixin, View):
+    def get(self, request, post_id):
+        return redirect('post-details', post_id=post_id)
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        user = request.user
+        content = request.POST.get("comment")
+
+        comment = Comment(user=user, post=post, content=content)
+        comment.save()
+
+        return redirect('post-details', post_id=post_id)
+
+
+class CreatePost(LoginRequiredMixin, View):
+    model = Post
+    fields = ["title", "content", "visual_content", "game"]
+    template_name = "posts/create-post.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        data = request.POST
+
+        game_name = data.get("game")
+        game_post = Game.objects.get(name=game_name)
+
+        title = data.get("title")
+        content = data.get("content")
+        visual_content = request.FILES.get("visual_content")
+        author = request.user
+
+        post = Post(title=title, content=content,
+                    visual_content=visual_content, game=game_post, author=author)
+
+        post.save()
+
+        return redirect('gamesPosts')
+
+
+class ListOwnPost(LoginRequiredMixin, ListView):
+    model = Post
+    paginate_by = 10
+    template_name = "posts/my-posts.html"
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
+
+
+class UpdateOwnPost(LoginRequiredMixin, View):
+    model = Post
+    fields = ["title", "content", "visual_content", "game"]
+    template_name = "posts/edit-post.html"
+
+    def get(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        return render(request, self.template_name, {"post": post})
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        data = request.POST
+
+        game_name = data.get("game")
+        game_post = Game.objects.get(name=game_name)
+
+        post.title = data.get("title")
+        post.content = data.get("content")
+        post.visual_content = request.FILES.get("visual_content")
+        post.game = game_post
+
+        post.save()
+
+        return redirect('my-posts')
+
+
+class DeleteOwnPost(LoginRequiredMixin, View):
+    model = Post
+    template_name = "posts/delete-post.html"
+
+    def get(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        return render(request, self.template_name, {"post": post})
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        post.delete()
+        return redirect('my-posts')
