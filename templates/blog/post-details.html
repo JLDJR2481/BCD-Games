@@ -14,25 +14,46 @@
             {% if author.profile_avatar %}
             <img src="{{ author.profile_avatar.url }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
             {% endif %}
-            <p class="mt-5">Escrito por {{ author.username }}</p>
+            <p class="mt-2">Escrito por {{ author.username }}</p>
 
-            <p class="text-muted mt-5">Publicado hace {{ post.publication_date|timesince }}
+            <p class="text-muted mt-1">Publicado hace {{ post.publication_date|timesince }}
             </p>
+            <div class="d-flex justify-content-around align-items-center">
+                <p class="text-muted mt-3">A {{ likes_count }} usuario{{likes_count|pluralize:"s"}}
+                    le{{likes_count|pluralize:"s"}}
+                    ha{{likes_count|pluralize:"n"}} gustado este post.</p>
+                {% if user_has_liked %}
+                <form action="{% url 'post-like' post.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm">Ya no me gusta</button>
+                </form>
+                {% else %}
+                <form action="{% url 'post-like' post.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm">Me gusta</button>
+                </form>
+                {% endif %}
+            </div>
+            <h2 class="mt-1">{{ post.title }}</h2>
             {% if post.visual_content %}
             <img src="{{ post.visual_content.url }}" class="img-fluid mx-auto d-block" alt="Post Image" width="50%" />
             {% endif %}
-            <h2 class="mt-5">{{ post.title }}</h2>
             <p class="mt-4">{{ post.content }}</p>
         </div>
 
-        <div class="col-12 mt-5">
-            <h3>Comentarios</h3>
-            <div class="row mt-5">
+        <div class="col-12 mt-3">
+            <h3>Comentarios ({{comments_count}})</h3>
+            <div class="row mt-2">
                 <div class="col-12">
                     {% for comment in comments %}
-                    <div class="row">
+                    <div class="row border">
                         <div class="col-2 d-flex flex-column justify-content-center align-items-center">
+                            {% if comment.user.id is author.id %}
+                            <p style="font-size: 12px; margin-bottom: 10px; font-weight: bolder;">
+                                {{ comment.user.username }} (Autor del post)</p>
+                            {% else %}
                             <p style="font-size: 12px; margin-bottom: 10px;">{{ comment.user.username }}</p>
+                            {% endif %}
                             <img src="{{ comment.user.profile_avatar.url }}" alt="User Logo"
                                 style="width: 50px; height: 50px; border-radius: 50%; margin-bottom:10px;"
                                 id="profileAvatar">
@@ -43,7 +64,7 @@
                         </div>
                     </div>
                     {% endfor %}
-                    <div class=" row mt-4">
+                    <div class=" row mt-2">
                         <div class="col-12">
                             {% if user.is_authenticated %}
                             <form action="" method="POST">
