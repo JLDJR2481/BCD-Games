@@ -17,7 +17,7 @@ class Post(models.Model):
         return self.like_set.count()
 
     def count_comments(self):
-        return self.comments_set.count()
+        return self.comment_set.count()
 
     def user_has_liked(self, user):
         return self.like_set.filter(user=user).exists()
