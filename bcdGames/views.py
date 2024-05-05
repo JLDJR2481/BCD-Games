@@ -45,19 +45,15 @@ class UserRegisterView(FormView):
     def form_valid(self, form):
         user = form.save()
         if user is not None:
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=user.username, password=raw_password)
+            raw_password = form.cleaned_data.get("password")
+            user = authenticate(
+                self.request, username=user.username, password=raw_password)
             if user is not None:
                 login(self.request, user)
-                print("Usuario registrado y autenticado correctamente.")
-            else:
-                print("La autenticación ha fallado.")
-        else:
-            print("El registro ha fallado.")
+
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("Formulario inválido:", form.errors)
         return super().form_invalid(form)
 
 
