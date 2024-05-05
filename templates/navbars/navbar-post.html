@@ -14,11 +14,14 @@
                         <li class="nav-item{% if request.path == '/' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'home' %}">Inicio</a>
                         </li>
-                        <li class="nav-item{% if '/' in request.path %} active {% endif %}">
+                        <li class="nav-item{% if request.path == '/posts/' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'gamesPosts' %}">Posts recientes</a>
                         </li>
-                        <li class="nav-item{% if '/search' in request.path %} active {% endif %}">
-                            <a class="nav-link" href="#">Mis posts</a>
+                        <li class="nav-item{% if request.path == '/posts/create-post/' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'create-post' %}">Crear Post</a>
+                        </li>
+                        <li class="nav-item{% if '/my-post' in request.path %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'my-posts' %}">Mis posts</a>
                         </li>
                     </ul>
                 </div>
@@ -54,7 +57,7 @@
 <div class=" offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
                     <div class="offcanvas-header">
                         {% if user.is_authenticated %}
-                        <h5 class="offcanvas-title" id="offcanvasUserLabel">{{user.username}}</h5>
+                        <h5 class="offcanvas-title" id="offcanvasUserLabel">¡Bienvenido {{user.username}}!</h5>
                         {% endif %}
                         <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>

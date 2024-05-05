@@ -16,23 +16,31 @@
             {% endif %}
             <p class="mt-2">Escrito por {{ author.username }}</p>
 
-            <p class="text-muted mt-1">Publicado hace {{ post.publication_date|timesince }}
-            </p>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="text-muted mt-1 col-sm-3" style="padding-left: 10px;">Publicado hace
+                    {{ post.publication_date|timesince }}
+                </div>
+                {% if post.last_update_date %}
+                <div class="text-muted mt-1 col-sm-3">Actualizado hace {{post.last_update_date|timesince}} </div>
+                {% endif %}
+            </div>
             <div class="d-flex justify-content-around align-items-center">
+                {% if likes_count is 0 %}
+                <p class="text-muted mt-3">Aún no le ha gustado a nadie este post.</p>
+                {% else %}
                 <p class="text-muted mt-3">A {{ likes_count }} usuario{{likes_count|pluralize:"s"}}
                     le{{likes_count|pluralize:"s"}}
                     ha{{likes_count|pluralize:"n"}} gustado este post.</p>
-                {% if user_has_liked %}
-                <form action="{% url 'post-like' post.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm">Ya no me gusta</button>
-                </form>
-                {% else %}
-                <form action="{% url 'post-like' post.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm">Me gusta</button>
-                </form>
                 {% endif %}
+                <form action="{% url 'post-like' post.id %}" method="POST">
+                    {% csrf_token %}
+                    {% if user_has_liked %}
+                    <button type="submit" class="btn btn-primary btn-sm">Ya no me gusta</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary btn-sm">Me gusta</button>
+                    {% endif %}
+                </form>
+
             </div>
             <h2 class="mt-1">{{ post.title }}</h2>
             {% if post.visual_content %}
@@ -47,17 +55,22 @@
                 <div class="col-12">
                     {% for comment in comments %}
                     <div class="row border">
-                        <div class="col-2 d-flex flex-column justify-content-center align-items-center">
+                        <div class="col-2 d-flex flex-column justify-content-center align-items-center mt-2">
                             {% if comment.user.id is author.id %}
-                            <p style="font-size: 12px; margin-bottom: 10px; font-weight: bolder;">
+                            <p style="font-size: 12px; margin-bottom: 5px; font-weight: bolder;">
                                 {{ comment.user.username }} (Autor del post)</p>
                             {% else %}
-                            <p style="font-size: 12px; margin-bottom: 10px;">{{ comment.user.username }}</p>
+                            <p style="font-size: 12px; margin-bottom: 5px;">{{ comment.user.username }}</p>
                             {% endif %}
-                            <img src="{{ comment.user.profile_avatar.url }}" alt="User Logo"
-                                style="width: 50px; height: 50px; border-radius: 50%; margin-bottom:10px;"
-                                id="profileAvatar">
-                            <p style="font-size: 12px;">{{ comment.comment_date|timesince }}</p>
+                            {% if comment.user.profile_avatar and comment.user.profile_avatar.file %}
+                            <img src="{{comment.user.profile_avatar.url}}" alt="User Logo"
+                                style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
+                            {% else %}
+                            <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
+                                style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
+
+                            {% endif %}
+                            <p style="font-size: 12px; margin-top: 5px;">{{ comment.comment_date|timesince }}</p>
                         </div>
                         <div class="col-10 d-flex justify-content-center flex-column">
                             <p>{{ comment.content }}</p>
@@ -67,18 +80,27 @@
                     <div class=" row mt-2">
                         <div class="col-12">
                             {% if user.is_authenticated %}
-                            <form action="" method="POST">
+                            <form action="{% url 'post-comment' post.id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-2 d-flex justify-content-center align-items-center">
                                         <label for="comment">
+                                            {% if user.profile_avatar and user.profile_avatar.file %}
                                             <img src="{{user.profile_avatar.url}}" alt="User Logo"
                                                 style="width: 50px; height: 50px; border-radius: 50%;"
                                                 id="profileAvatar">
+
+                                            {% else %}
+                                            <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
+                                                style="width: 50px; height: 50px; border-radius: 50%;"
+                                                id="profileAvatar">
+
+                                            {% endif %}
                                         </label>
                                     </div>
                                     <div class="col-sm-8 d-flex justify-content-center align-items-center">
-                                        <textarea class="form-control" id="comment" name="comment" rows="1"></textarea>
+                                        <textarea class="form-control" id="comment" name="comment" rows="1"
+                                            placeholder="Escribe un comentario" required minlength="10"></textarea>
                                     </div>
                                     <div class="col-sm-2 d-flex justify-content-center align-items-center">
                                         <button type="submit" class="btn btn-primary">Comentar</button>
@@ -86,7 +108,7 @@
                                 </div>
                             </form>
                             {% else %}
-                            <p>Para comentar, <a href="{% url 'login' %}">inicia sesión</a></p>
+                            <p>Para comentar, <a href="{% url 'login' %}?next={{ request.path }}">inicia sesión</a></p>
                             {% endif %}
                         </div>
                     </div>

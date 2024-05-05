@@ -1,0 +1,67 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Editar post{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar-post.html" %}
+{% endblock navbar %}
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-12">
+
+            <h1 class="text-center">Editar post</h1>
+            <form action="{% url 'edit-post' post_id=post.id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Contenido</label>
+                    <textarea class="form-control" id="content" name="content" rows="3"
+                        required>{{ post.content }}</textarea>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-md-3">
+                        <label for="visual_content" class="form-label">Imagen</label>
+                        <input type="file" class="form-control-file" id="visual_content" name="visual_content"
+                            style="height: auto;" onchange="loadFile(event)">
+                    </div>
+                    <div class="col-md-9">
+
+                        <img src="{% if post.visual_content %}{{post.visual_content.url}}{%endif%}" id="output"
+                            width="200" style="display: block;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="game" class="form-label">Juego</label>
+                    <input type="text" class="form-control" id="game" name="game" value="{{ post.game }}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Editar post</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src)
+        }
+    };
+
+    $(function () {
+        $("#game").autocomplete({
+            source: "{% url 'search' %}",
+            minLength: 2,
+        });
+    });
+</script>
+
+{% endblock %}
