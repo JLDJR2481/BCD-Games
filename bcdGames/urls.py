@@ -14,4 +14,5 @@ urlpatterns = [
     path("logout/", UserLogoutView.as_view(), name="logout"),
     path("register/", UserRegisterView.as_view(), name="register"),
     path("update/", UserUpdateView.as_view(), name="update-profile"),
+    path('game/', include('game.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -74,6 +74,12 @@
     transition: all 0.75s ease-in-out;
     border: 2px solid white;
   }
+
+  #highScoreTable thead tr,
+  #highScoreTable tbody tr {
+    background-color: #292929;
+    color: #ffffff;
+  }
 }
 #light {
   transition: all 0.75s ease-in-out;

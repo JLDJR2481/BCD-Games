@@ -1,0 +1,99 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Snake Game{% endblock  %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar.html" %}
+{% endblock navbar %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">¡Bienvenido a Snake Game!</h1>
+        </div>
+        <div class="col-12 text-center" id="instructions">
+            <p>Usa las flechas del teclado para mover a la serpiente</p>
+            <p>Presiona el botón de inicio para comenzar la partida</p>
+        </div>
+    </div>
+</div>
+<div id="startScreen" style="display: flex;" class="justify-content-center mt-4">
+    <button id="startButton" class="btn btn-primary">Iniciar partida</button>
+</div>
+<div class="d-flex justify-content-center align-items-center flex-column">
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <p id="scoreInGame" style="display: none">Puntuación: 0</p>
+</div>
+<div id="gameOverScreen" style="display: none;">
+    <h1>Game Over</h1>
+    <p id="scoreGameOver"></p>
+    <button id="retryButton" class="btn btn-primary mt-2">Reintentar</button>
+</div>
+<form id="csrfForm" style="display: none;">
+    {% csrf_token %}
+</form>
+<div class="container" id="highScores" style="display: none;">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h3 class="mt-3">Puntuaciones más altas</h3>
+            <table class="table table-bordered" id="highScoreTable">
+                <thead>
+                    <tr>
+                        <th scope="col"> Posición </th>
+                        <th scope="col"> Usuario </th>
+                        <th scope="col"> Puntuación </th>
+                    <tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr>
+                        <td class="align-middle">{{ forloop.counter }}</td>
+                        <td>
+                            <div class="row d-flex justify-content-center align-items-center flex-column">
+                                <div class="col-sm-6">
+                                    {% if score.user.profile_avatar is not None %}
+                                    <img src="{{ score.user.profile_avatar.url }}" class="rounded-circle" width="50"
+                                        height="50" alt="profile image">
+                                    {% else %}
+                                    <img src="{% static 'images/default_profile.png' %}" class="rounded-circle"
+                                        width="50" height="50" alt="profile image">
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ score.user.username }}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle">{{ score.score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function postScore() {
+
+        var csrftoken = document.querySelector('#csrfForm [name=csrfmiddlewaretoken]').value;
+
+        var data = new FormData()
+        data.append("csrfmiddlewaretoken", csrftoken)
+        data.append('score', score);
+
+        fetch("{%url 'save_score' %}", {
+                method: "POST",
+                body: data
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => console.error(error))
+    }
+</script>
+
+<script src="{% static 'js/snake.js' %}">
+</script>
+{% endblock %}

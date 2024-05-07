@@ -21,7 +21,7 @@
                             <a class="nav-link" href="{% url 'searchEngine' %}">Buscar</a>
                         </li>
                         <li class="nav-item{% if '/game' in request.path %} active {% endif %}">
-                            <a class="nav-link" href="#">Juego BCD-Games</a>
+                            <a class="nav-link" href="{% url 'game' %}">Juego BCD-Games</a>
                         </li>
                     </ul>
                 </div>

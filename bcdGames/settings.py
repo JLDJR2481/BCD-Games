@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'searchEngine',
     'gamesPosts',
+    'game',
     'debug_toolbar',
 ]
 
