@@ -70,3 +70,7 @@ class UserUpdateView(View):
         else:
             form = UserUpdateForm(instance=request.user)
         return render(request, "users/edit-profile.html", {"form": form})
+
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)

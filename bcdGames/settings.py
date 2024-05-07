@@ -24,15 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-60u!b)(k=(pc+68e&g%7#w2kdpzy(()c!%&&%dh*xv4!+wyx-u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -47,18 +41,17 @@ INSTALLED_APPS = [
     'searchEngine',
     'gamesPosts',
     'game',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'bcdGames.urls'
@@ -127,11 +120,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR / 'staticfiles')
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR / 'static'),)
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR / 'static')]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STATIC_ROOT = os.path.join(BASE_DIR / 'staticfiles')
+STATIC_TMP = os.path.join(BASE_DIR / 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -144,3 +140,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = "/media/"
 
 LOGIN_URL = "/login/"
+
+handler404 = 'bcdGames.views.custom_404'

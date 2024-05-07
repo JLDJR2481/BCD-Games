@@ -5,7 +5,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("__debug__/", include("debug_toolbar.urls")),
     path('admin/', admin.site.urls),
     path('', RootView.as_view(), name='home'),
     path('search/', include('searchEngine.urls')),
@@ -15,4 +14,4 @@ urlpatterns = [
     path("register/", UserRegisterView.as_view(), name="register"),
     path("update/", UserUpdateView.as_view(), name="update-profile"),
     path('game/', include('game.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
