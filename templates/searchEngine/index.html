@@ -38,4 +38,12 @@
     </div>
 </div>
 {% endif %}
+<script>
+    $(function () {
+        $("#search").autocomplete({
+            source: "{% url 'game-search' %}",
+            minLength: 2,
+        });
+    });
+</script>
 {% endblock %}

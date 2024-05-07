@@ -6,6 +6,8 @@ from django.utils.translation import get_language
 from django.contrib import messages
 from .models import Game
 
+from django.http import JsonResponse
+
 from operator import itemgetter
 
 from redis import Redis
@@ -24,12 +26,24 @@ redis = Redis(
 )
 
 
+def gameSearch(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        consulta = request.GET.get("term")
+        games = Game.objects.filter(
+            name__startswith=consulta).values_list('name', flat=True)
+        resultados = [game for game in games]
+        return JsonResponse(resultados, safe=False)
+    return JsonResponse({}, safe=False)
+
+
 class BaseView(View):
 
     def get_game(self, input):
         games = self.redis_search(input)
 
         if games:
+            if input == "":
+                self.store_cache_redis(games)
             return games
         else:
             games = self.search_game(input)
@@ -43,9 +57,13 @@ class BaseView(View):
         return games
 
     def redis_search(self, input):
-        games = [game for game in redis.hgetall('games').items(
-        ) if game[1].decode("utf-8").lower().startswith(input)]
-        return [{'id': game[0].decode("utf-8"), 'name': game[1].decode("utf-8")} for game in games]
+        if input == "":
+            games = Game.objects.all().values('id', 'name')
+            return [{'id': game['id'], 'name': game['name']} for game in games]
+        else:
+            games = [game for game in redis.hgetall('games').items(
+            ) if game[1].decode("utf-8").lower().startswith(input)]
+            return [{'id': game[0].decode("utf-8"), 'name': game[1].decode("utf-8")} for game in games]
 
     def store_cache_redis(self, games):
         with redis.pipeline() as pipe:
