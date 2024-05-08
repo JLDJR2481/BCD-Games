@@ -53,7 +53,7 @@
                         <td>
                             <div class="row d-flex justify-content-center align-items-center flex-column">
                                 <div class="col-sm-6">
-                                    {% if score.user.profile_avatar is not None %}
+                                    {% if score.user.profile_avatar %}
                                     <img src="{{ score.user.profile_avatar.url }}" class="rounded-circle" width="50"
                                         height="50" alt="profile image">
                                     {% else %}
