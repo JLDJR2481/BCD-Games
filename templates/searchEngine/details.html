@@ -61,7 +61,8 @@
     {% if game.background_image %}
     <div class="row p-3">
         <div class="col-12 d-flex justify-content-center align-items-center">
-            <img src="{{ game.background_image }}" alt="{{ game.name }}" style="width: 75%; height: auto;">
+            <img src="{{ game.background_image }}" alt="{{ game.name }}" style="width: 75%; height: auto;"
+                onerror="this.style.display='none'">
         </div>
     </div>
     {% endif %}
