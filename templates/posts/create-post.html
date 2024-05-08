@@ -1,0 +1,61 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Crear post{% endblock %}
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar-post.html" %}
+{% endblock navbar %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">Crear post</h1>
+            <form action="{% url 'create-post' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Contenido</label>
+                    <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-md-3">
+                        <label for="visual_content" class="form-label">Imagen</label>
+                        <input type="file" class="form-control-file" id="visual_content" name="visual_content"
+                            style="height: auto;" onchange="loadFile(event)">
+                    </div>
+                    <div class="col-md-9">
+                        <img id="output" width="200" style="display: none;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="game" class="form-label">Juego</label>
+                    <input type="text" class="form-control" id="game" name="game" required>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Crear post</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+        output.style.display = 'block';
+    };
+
+    $(function () {
+        $("#game").autocomplete({
+            source: "{% url 'search' %}",
+            minLength: 2,
+        });
+    });
+</script>
+{% endblock %}

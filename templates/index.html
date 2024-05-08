@@ -1,0 +1,73 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Índice{% endblock  %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar.html" %}
+{% endblock navbar %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">¡Bienvenido a BCD-Games!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p class="text-center">¡Entérate del mundo de los videojuegos ya!</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">¿Qué es BCD-Games?</h2>
+            <p class="text-center">
+                En BCD-Games, nos apasiona el mundo de los videojuegos y queremos compartir esa pasión contigo. Nuestra
+                plataforma está diseñada para proporcionarte toda la información que necesitas sobre tus juegos
+                favoritos y descubrir nuevas experiencias de juego emocionantes.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <h3 class="text-center">¿Qué puedes hacer en BCD-Games?</h3>
+        <div class="col-4">
+            <div class="text-center mt-4">
+                <h4> Explorar posts de usuarios</h4>
+                <p>
+                    Explora nuestra colección de opiniones y reseñas de usuarios, donde encontrarás comentarios honestos
+                    y
+                    perspicaces sobre una amplia variedad de videojuegos. Desde los últimos lanzamientos hasta los
+                    clásicos
+                    atemporales, nuestra comunidad está aquí para ayudarte a tomar decisiones informadas sobre qué jugar
+                    a
+                    continuación. El acceso es gratuito, pero se requiere de una cuenta para poder realizar comentarios
+                    y
+                    valorar los posts. <a href="{% url 'login' %}">¡Inicia sesión aquí!</a>
+                </p>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="text-center mt-4">
+                <h4>Buscar información sobre juegos</h4>
+                <p>
+                    Utiliza nuestra función de búsqueda para encontrar información detallada sobre tus juegos favoritos.
+                    Desde la fecha de lanzamiento hasta las características del juego, estamos aquí para proporcionarte
+                    todo
+                    lo que necesitas saber para sumergirte en la experiencia de juego perfecta.
+                </p>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="text-center mt-4">
+                <h4>Jugar al juego de BCD-Games</h4>
+                <p>
+                    En BCD-Games, además de emocionarnos el mundo de los videojuegos, somos unos nostálgicos de mucho
+                    cuidado. Prueba de ello, es esta versión de Snake que hemos creado para tu disfrute. Para guardar la
+                    puntuación, se debe tener
+                    una <a href="{% url 'login' %}">cuenta de usuario</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

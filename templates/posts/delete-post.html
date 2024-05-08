@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Borrar post{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar-post.html" %}
+{% endblock navbar %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">¿Seguro que quieres borrar este post?</h1>
+            <form action="{% url 'delete-post' post_id=post.id %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Contenido</label>
+                    <textarea class="form-control" id="content" name="content" rows="3"
+                        disabled>{{ post.content }}</textarea>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-md-3">
+                        <label for="visual_content" class="form-label">Imagen</label>
+                        <input type="file" class="form-control-file" id="visual_content" name="visual_content"
+                            style="height: auto;" disabled>
+                    </div>
+                    <div class="col-md-9">
+                        <img src="{% if post.visual_content %}{{post.visual_content.url}}{%endif%}" id="output"
+                            width="200" style="display: block;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="game" class="form-label">Juego</label>
+                    <input type="text" class="form-control" id="game" name="game" value="{{ post.game }}" disabled>
+                </div>
+                <button type="submit" class="btn btn-danger">Borrar post</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

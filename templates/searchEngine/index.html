@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% block title %}Search Engine{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar.html" %}
+{% endblock navbar %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger" role="alert">
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
+<h1 class="text-center">¡Bienvenido a nuestro SE!</h1>
+<div class="search-box">
+    <form action="{% url 'results' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="searchEngineInput" id="search" placeholder="¡Busca tus juegos aquí!">
+        <button type="submit">Buscar</button>
+    </form>
+</div>
+
+{% if searched_games is not None %}
+<div class="container">
+    <div class="row">
+        <h2 class="text-center">Últimas búsquedas realizadas</h3>
+            {% for game in searched_games %}
+            <div class="col-md-4">
+                <div class="card mb-4 rounded">
+                    <div class="card-body text-center d-flex flex-column justify-content-center game-result-container">
+                        <h5 class="card-title align-self-center" style="min-height: 75px;">{{ game.name }}</h5>
+                        <a href="{% url 'details' game_id=game.id %}" class="btn btn-primary">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+</div>
+{% endif %}
+<script>
+    $(function () {
+        $("#search").autocomplete({
+            source: "{% url 'game-search' %}",
+            minLength: 2,
+        });
+    });
+</script>
+{% endblock %}
