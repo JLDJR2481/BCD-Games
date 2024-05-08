@@ -78,12 +78,8 @@ WSGI_APPLICATION = 'bcdGames.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('PROD_DB_NAME'),
-        "USER": os.environ.get('PROD_DB_USER'),
-        "PASSWORD": os.environ.get('PROD_DB_PASSWORD'),
-        "HOST": os.environ.get('PROD_DB_HOST'),
-        "POST": os.environ.get('PROD_DB_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
