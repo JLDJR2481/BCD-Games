@@ -2,8 +2,4 @@ venv
 .venv
 .env
 
-json/
-
 __pycache__/
-
-media/
