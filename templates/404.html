@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Página no encontrada{% endblock title %}
+
+{% block content %}
+{% block navbar%}
+{% if "/posts" in request.path %}
+{% include "navbars/navbar-post.html" %}
+{% else %}
+{% include "navbars/navbar.html" %}
+{% endif %}
+{% endblock navbar %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>¿Página no encontrada?</h1>
+            <p>¿La página que buscas no existe?</p>
+            <img src="{% static 'images/404-image.png' %}" alt="Error 404"
+                style="position: absolute; top: 30%; left: 55%; height: 25%;">
+        </div>
+    </div>
+</div>
+{% endblock content %}
