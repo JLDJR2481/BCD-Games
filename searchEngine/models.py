@@ -32,6 +32,8 @@ class Game(models.Model):
 class CustomUser(AbstractUser):
     profile_avatar = models.ImageField(
         upload_to="avatars/", null=True, blank=True)
+    is_active = models.BooleanField(default=False)
+    active_code = models.IntegerField(null=True)
 
     def __str__(self):
         return self.username
