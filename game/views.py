@@ -2,21 +2,21 @@ from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import GameScores
+from .models import GameScore
 
 from searchEngine.models import CustomUser
 
 
 class GameView(LoginRequiredMixin, View):
-    model = GameScores
+    model = GameScore
 
     def get(self, request):
-        scores = GameScores.objects.all().order_by('-score')[:10]
+        scores = GameScore.objects.all().order_by('-score')[:10]
         return render(request, 'game/index.html', {"scores": scores})
 
 
 class SaveScoreView(LoginRequiredMixin, View):
-    model = GameScores
+    model = GameScore
 
     def post(self, request):
 
@@ -25,6 +25,6 @@ class SaveScoreView(LoginRequiredMixin, View):
         score = data.get("score")
         user = CustomUser.objects.get(id=request.user.id)
 
-        GameScores.objects.create(score=score, user=user)
+        GameScore.objects.create(score=score, user=user)
 
         return JsonResponse({"status": "success"})
