@@ -142,3 +142,9 @@ MEDIA_URL = "/media/"
 LOGIN_URL = "/login/"
 
 handler404 = 'bcdGames.views.custom_404'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
