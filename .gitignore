@@ -2,8 +2,6 @@ venv
 .venv
 .env
 
-json/
+media/
 
 __pycache__/
-
-media/

@@ -126,7 +126,7 @@
     "admin/js/SelectFilter2.js": "admin/js/SelectFilter2.b8cf7343ff9e.js",
     "admin/js/theme.js": "admin/js/theme.ab270f56bb9c.js",
     "admin/js/urlify.js": "admin/js/urlify.ae970a820212.js",
-    "css/styles.css": "css/styles.18785e7c1606.css",
+    "css/styles.css": "css/styles.c3bcb680bccc.css",
     "images/404-image.png": "images\\404-image.1b4420465756.png",
     "images/default-avatar.png": "images\\default-avatar.8205fc7ba537.png",
     "images/logotipo-without-background-darkmode.png": "images\\logotipo-without-background-darkmode.d7e64b64b3b9.png",
@@ -138,5 +138,5 @@
     "js/snake.js": "js/snake.4cceddff9d9d.js"
   },
   "version": "1.1",
-  "hash": "3838fda7662c"
+  "hash": "4ea1cfc450bc"
 }
