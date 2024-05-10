@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth import authenticate
-from searchEngine.models import CustomUser, Game
+from searchEngine.models import CustomUser
 import re
-from gamesPosts.models import Post
+
+from django.contrib.auth import login
 
 
 # Users forms
@@ -24,8 +25,10 @@ class UserLoginForm(forms.Form):
                 self.request, username=username, password=password)
             if self.user_cache is None:
                 raise forms.ValidationError("Login fallido")
-            elif not self.user_cache.is_active:
-                raise forms.ValidationError("Usuario no activo")
+
+            else:
+                self.user_cache.backend = "django.contrib.auth.backends.ModelBackend"
+                login(self.request, self.user_cache)
         return cleaned_data
 
     def get_user(self):

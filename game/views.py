@@ -1,22 +1,21 @@
 from django.shortcuts import render
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from .models import GameScore
 
 from searchEngine.models import CustomUser
 
-from django.core import serializers
+from bcdGames.mixins import EmailVerifiedRequiredMixin
 
 
-class GameView(LoginRequiredMixin, View):
+class GameView(EmailVerifiedRequiredMixin, View):
     model = GameScore
 
     def get(self, request):
         return render(request, 'game/index.html')
 
 
-class SaveScoreView(LoginRequiredMixin, View):
+class SaveScoreView(EmailVerifiedRequiredMixin, View):
     model = GameScore
 
     def post(self, request):
@@ -31,7 +30,7 @@ class SaveScoreView(LoginRequiredMixin, View):
         return JsonResponse({"status": "success"})
 
 
-class GetTopScoreView(LoginRequiredMixin, View):
+class GetTopScoreView(EmailVerifiedRequiredMixin, View):
     def get(self, request):
         top_10_scores = GameScore.objects.all().order_by('-score')[:10]
 

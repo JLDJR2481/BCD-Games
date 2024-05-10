@@ -32,10 +32,9 @@ class UserLoginView(LoginView):
         return response
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        if not self.request.user.is_active:
+        if not self.request.user.email_verified:
             return redirect("verify")
-        return response
+        return super().form_valid(form)
 
     def get_success_url(self):
         next_url = self.request.GET.get("next")
@@ -57,7 +56,6 @@ class UserRegisterView(FormView):
     def form_valid(self, form):
         user_verification_code = random.randint(0, 999999)
         user = form.save()
-        user.is_active = False
         user.active_code = user_verification_code
         user.save()
         email = user.email
@@ -95,7 +93,7 @@ class UserVerifyView(View):
         active_code = user.active_code
 
         if user and active_code == int(input_code):
-            user.is_active = True
+            user.email_verified = True
             user.save()
             login(request, user)
             return redirect("home")
