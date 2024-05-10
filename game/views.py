@@ -6,13 +6,14 @@ from .models import GameScore
 
 from searchEngine.models import CustomUser
 
+from django.core import serializers
+
 
 class GameView(LoginRequiredMixin, View):
     model = GameScore
 
     def get(self, request):
-        scores = GameScore.objects.all().order_by('-score')[:10]
-        return render(request, 'game/index.html', {"scores": scores})
+        return render(request, 'game/index.html')
 
 
 class SaveScoreView(LoginRequiredMixin, View):
@@ -28,3 +29,20 @@ class SaveScoreView(LoginRequiredMixin, View):
         GameScore.objects.create(score=score, user=user)
 
         return JsonResponse({"status": "success"})
+
+
+class GetTopScoreView(LoginRequiredMixin, View):
+    def get(self, request):
+        top_10_scores = GameScore.objects.all().order_by('-score')[:10]
+
+        data = []
+
+        for score in top_10_scores:
+            user = CustomUser.objects.get(id=score.user.id)
+            data.append({
+                "score": score.score,
+                "username": user.username,
+                "profile_avatar": user.profile_avatar.url if user.profile_avatar else None
+            })
+
+        return JsonResponse({"scores": data}, safe=False)
