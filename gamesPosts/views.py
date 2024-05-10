@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Comment, Like
 from searchEngine.models import CustomUser
 from django.views import View
 from searchEngine.models import Game
 from django.http import JsonResponse
+
+from bcdGames.mixins import EmailVerifiedRequiredMixin
 
 
 def search(request):
@@ -75,7 +76,7 @@ class PostDetailView(DetailView):
         })
 
 
-class PostLike(LoginRequiredMixin, View):
+class PostLike(EmailVerifiedRequiredMixin, View):
     def get(self, request, post_id):
         return redirect('post-details', post_id=post_id)
 
@@ -93,7 +94,7 @@ class PostLike(LoginRequiredMixin, View):
         return redirect('post-details', post_id=post_id)
 
 
-class PostComment(LoginRequiredMixin, View):
+class PostComment(EmailVerifiedRequiredMixin, View):
     def get(self, request, post_id):
         return redirect('post-details', post_id=post_id)
 
@@ -108,7 +109,7 @@ class PostComment(LoginRequiredMixin, View):
         return redirect('post-details', post_id=post_id)
 
 
-class CreatePost(LoginRequiredMixin, View):
+class CreatePost(EmailVerifiedRequiredMixin, View):
     model = Post
     fields = ["title", "content", "visual_content", "game"]
     template_name = "posts/create-post.html"
@@ -135,7 +136,7 @@ class CreatePost(LoginRequiredMixin, View):
         return redirect('gamesPosts')
 
 
-class ListOwnPost(LoginRequiredMixin, ListView):
+class ListOwnPost(EmailVerifiedRequiredMixin, ListView):
     model = Post
     paginate_by = 10
     template_name = "posts/my-posts.html"
@@ -144,7 +145,7 @@ class ListOwnPost(LoginRequiredMixin, ListView):
         return Post.objects.filter(author=self.request.user)
 
 
-class UpdateOwnPost(LoginRequiredMixin, View):
+class UpdateOwnPost(EmailVerifiedRequiredMixin, View):
     model = Post
     fields = ["title", "content", "visual_content", "game"]
     template_name = "posts/edit-post.html"
@@ -170,7 +171,7 @@ class UpdateOwnPost(LoginRequiredMixin, View):
         return redirect('my-posts')
 
 
-class DeleteOwnPost(LoginRequiredMixin, View):
+class DeleteOwnPost(EmailVerifiedRequiredMixin, View):
     model = Post
     template_name = "posts/delete-post.html"
 

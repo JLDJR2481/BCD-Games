@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from gamesPosts.models import Post
 # Create your models here.
 
 
@@ -24,14 +25,21 @@ class Game(models.Model):
     developers = models.JSONField(null=True)
     publishers = models.JSONField()
     esbr_ratings = models.JSONField()
+    search_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
+
+    def get_post_count(self):
+        return Post.objects.filter(game=self).count()
 
 
 class CustomUser(AbstractUser):
     profile_avatar = models.ImageField(
         upload_to="avatars/", null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    active_code = models.IntegerField(null=True)
+    email_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username

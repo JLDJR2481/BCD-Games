@@ -1,18 +1,17 @@
 from django import forms
-from django.contrib.auth import authenticate
-from searchEngine.models import CustomUser, Game
+from django.contrib.auth import authenticate, login
+from searchEngine.models import CustomUser
 import re
-from gamesPosts.models import Post
 
 
 # Users forms
 class UserLoginForm(forms.Form):
+    username = forms.CharField(label="Username", max_length=18)
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(UserLoginForm, self).__init__(*args, **kwargs)
-
-    username = forms.CharField(label="Username", max_length=18)
-    password = forms.CharField(label="Password", widget=forms.PasswordInput)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -24,8 +23,9 @@ class UserLoginForm(forms.Form):
                 self.request, username=username, password=password)
             if self.user_cache is None:
                 raise forms.ValidationError("Login fallido")
-            elif not self.user_cache.is_active:
-                raise forms.ValidationError("Usuario no activo")
+            else:
+                self.user_cache.backend = "django.contrib.auth.backends.ModelBackend"
+                login(self.request, self.user_cache)
         return cleaned_data
 
     def get_user(self):
@@ -36,7 +36,6 @@ class UserRegisterForm(forms.ModelForm):
     password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
     password2 = forms.CharField(
         label="Confirmar contraseña", widget=forms.PasswordInput)
-
     email = forms.EmailField(label="Email", required=True)
 
     class Meta:
@@ -56,7 +55,6 @@ class UserRegisterForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-
         if CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError(
                 "El email ya está en uso. Por favor elige un email diferente.")
