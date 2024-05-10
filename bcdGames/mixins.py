@@ -3,8 +3,9 @@ from django.shortcuts import redirect
 
 
 class EmailVerifiedRequiredMixin(AccessMixin):
-
-    # Mixin personalizado para limitar que los usuarios no puedan acceder a ninguna funcinalidad hasta que confirme su correo
+    """
+    Mixin personalizado para limitar que los usuarios no puedan acceder a ninguna funcionalidad hasta que confirme su correo
+    """
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

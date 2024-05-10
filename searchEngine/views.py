@@ -1,24 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView, DetailView
 from django.utils.translation import get_language
 from django.contrib import messages
 from .models import Game
-
 from gamesPosts.models import Post
-
 from django.http import JsonResponse
-
 from operator import itemgetter
-
 from django.core.paginator import Paginator
-
 from redis import Redis
 import dotenv
 
-
-# Create your views here.
 dotenv.load_dotenv(dotenv.find_dotenv())
 env = dotenv.dotenv_values()
 
@@ -48,7 +40,6 @@ def gameSearch(request):
 
 
 class BaseView(View):
-
     def get_game(self, input):
         games = self.redis_search(input)
 
@@ -85,7 +76,6 @@ class BaseView(View):
 
 
 class SearchEngineView(BaseView):
-
     def get(self, request):
         searched_games = request.session.get("searched_games", None)
         return render(request, "searchEngine/index.html", {"searched_games": searched_games})
@@ -93,14 +83,11 @@ class SearchEngineView(BaseView):
 
 class ResultsListView(BaseView, ListView):
     paginate_by = 12
-
     template_name = "searchEngine/results.html"
 
     def post(self, request, *args, **kwargs):
         input = request.POST.get('searchEngineInput')
-
         input = input.replace("(Más buscado)", "").strip()
-
         games = self.get_game(input)
         if not games:
             messages.error(
@@ -133,14 +120,10 @@ class ResultsListView(BaseView, ListView):
 class ResultDetailView(BaseView, DetailView):
     def get(self, request, game_id):
         input_game_id = int(game_id)
-
         counter_game = Game.objects.get(id=input_game_id)
-
         counter_game.search_count += 1
         counter_game.save()
-
         game = Game.objects.filter(id=input_game_id).values().first()
-
         searched_games = request.session.get("searched_games", [])
 
         if not any(game.get("id") == searched_game.get("id") for searched_game in searched_games):
@@ -154,9 +137,7 @@ class ResultDetailView(BaseView, DetailView):
             description = game.get("description")
 
         game_ratings = game.get("ratings")
-
         ratings = sorted(game_ratings, key=itemgetter('id'), reverse=True)
-
         posts = Post.objects.filter(game=game["id"]).values().count()
 
         return render(request, "searchEngine/details.html", {"game": game, "description": description, "ratings": ratings, "posts": posts})
@@ -169,7 +150,6 @@ class GamePostsListView(BaseView, ListView):
     def get(self, request, game_id):
         posts_list = Post.objects.filter(game=game_id)
         paginator = Paginator(posts_list, self.paginate_by)
-
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 

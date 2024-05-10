@@ -1,15 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth.views import LoginView, LogoutView
-from .forms import UserLoginForm, UserRegisterForm, UserUpdateForm
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic.edit import FormView
-from django.contrib.auth import authenticate, login
-
-from searchEngine.models import CustomUser
-
 from django.core.mail import send_mail
+from searchEngine.models import CustomUser
+from .forms import UserLoginForm, UserRegisterForm, UserUpdateForm
 import os
 import random
 
@@ -21,7 +18,6 @@ class RootView(View):
 
 class UserLoginView(LoginView):
     template_name = "registration/login.html"
-    fields = "__all__"
     authentication_form = UserLoginForm
     redirect_authenticated_user = True
 
@@ -38,10 +34,7 @@ class UserLoginView(LoginView):
 
     def get_success_url(self):
         next_url = self.request.GET.get("next")
-        if next_url:
-            return next_url
-        else:
-            return reverse_lazy("home")
+        return next_url if next_url else reverse_lazy("home")
 
 
 class UserLogoutView(LogoutView):
@@ -68,18 +61,13 @@ class UserRegisterView(FormView):
                 [f"{email}"],
                 auth_password=os.environ.get("SMTP_APP_PASS")
             )
-
             self.request.session["user_id"] = user.id
-
         else:
             messages.error(
                 self.request, "El registro ha fallado. Por favor, inténtalo de nuevo.")
             return render(self.request, "registration/register.html")
 
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
 
 
 class UserVerifyView(View):
@@ -89,13 +77,11 @@ class UserVerifyView(View):
     def post(self, request):
         input_code = request.POST.get("verification-code")
         user = CustomUser.objects.get(id=request.session["user_id"])
-
         active_code = user.active_code
 
         if user and active_code == int(input_code):
             user.email_verified = True
             user.save()
-            login(request, user)
             return redirect("home")
         else:
             messages.error(
@@ -112,7 +98,6 @@ class UserUpdateView(View):
                               instance=request.user)
         if form.is_valid():
             form.save()
-
         else:
             form = UserUpdateForm(instance=request.user)
         return render(request, "users/edit-profile.html", {"form": form})
@@ -138,9 +123,7 @@ class ForgotPasswordEmailView(View):
                 [f"{email}"],
                 auth_password=os.environ.get("SMTP_APP_PASS")
             )
-
             self.request.session["user_id"] = user.id
-
             return redirect("verify-forgot-password")
         else:
             messages.error(
@@ -154,15 +137,12 @@ class VerifyForgotPasswordView(View):
 
     def post(self, request):
         user_id = self.request.session["user_id"]
-
         user = CustomUser.objects.get(id=user_id)
         code = user.active_code
-
         input_code = request.POST.get("verification-code")
 
         if user and int(input_code) == code:
             return redirect("reset-password")
-
         else:
             messages.error(
                 request, "Código de verificación incorrecto. Por favor, inténtalo de nuevo.")
@@ -176,7 +156,6 @@ class ResetPasswordView(View):
     def post(self, request):
         user_id = self.request.session["user_id"]
         user = CustomUser.objects.get(id=user_id)
-
         password = request.POST.get("password")
         confirm_password = request.POST.get("password2")
 
@@ -184,7 +163,6 @@ class ResetPasswordView(View):
             user.set_password(password)
             user.save()
             return redirect("login")
-
         else:
             messages.error(
                 request, "Las contraseñas no coinciden. Por favor, inténtalo de nuevo.")
