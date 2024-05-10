@@ -33,10 +33,8 @@ class UserLoginView(LoginView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        if not self.request.is_active:
-            self.request.session["user_id"] = self.request.user.id
+        if not self.request.user.is_active:
             return redirect("verify")
-
         return response
 
     def get_success_url(self):
@@ -57,7 +55,7 @@ class UserRegisterView(FormView):
     success_url = reverse_lazy("verify")
 
     def form_valid(self, form):
-        user_verification_code = random.randint(100000, 999999)
+        user_verification_code = random.randint(0, 999999)
         user = form.save()
         user.is_active = False
         user.active_code = user_verification_code
@@ -132,7 +130,7 @@ class ForgotPasswordEmailView(View):
 
         if user:
             email = user.email
-            code = random.randint(100000, 999999)
+            code = random.randint(0, 999999)
             user.active_code = code
             user.save()
             send_mail(
@@ -142,6 +140,8 @@ class ForgotPasswordEmailView(View):
                 [f"{email}"],
                 auth_password=os.environ.get("SMTP_APP_PASS")
             )
+
+            self.request.session["user_id"] = user.id
 
             return redirect("verify-forgot-password")
         else:
@@ -183,7 +183,7 @@ class ResetPasswordView(View):
         confirm_password = request.POST.get("password2")
 
         if password == confirm_password:
-            user.password = password
+            user.set_password(password)
             user.save()
             return redirect("login")
 
