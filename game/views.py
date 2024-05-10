@@ -1,103 +1,38 @@
-from django import forms
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render
+from django.views import View
+from django.http import JsonResponse
+from .models import GameScore
 from searchEngine.models import CustomUser
-import re
+from bcdGames.mixins import EmailVerifiedRequiredMixin
 
 
-# Users forms
-class UserLoginForm(forms.Form):
-    username = forms.CharField(label="Username", max_length=18)
-    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+class GameView(EmailVerifiedRequiredMixin, View):
+    model = GameScore
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super(UserLoginForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get("username")
-        password = cleaned_data.get("password")
-
-        if username and password:
-            self.user_cache = authenticate(
-                self.request, username=username, password=password)
-            if self.user_cache is None:
-                raise forms.ValidationError("Login fallido")
-            else:
-                self.user_cache.backend = "django.contrib.auth.backends.ModelBackend"
-                login(self.request, self.user_cache)
-        return cleaned_data
-
-    def get_user(self):
-        return self.user_cache
+    def get(self, request):
+        return render(request, 'game/index.html')
 
 
-class UserRegisterForm(forms.ModelForm):
-    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
-    password2 = forms.CharField(
-        label="Confirmar contraseña", widget=forms.PasswordInput)
-    email = forms.EmailField(label="Email", required=True)
+class SaveScoreView(EmailVerifiedRequiredMixin, View):
+    model = GameScore
 
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email']
-        labels = {
-            'username': 'Usuario',
-            'email': 'Email',
-        }
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if CustomUser.objects.filter(username=username).exists():
-            raise forms.ValidationError(
-                "El nombre de usuario ya está en uso. Por favor elige un nombre de usuario diferente.")
-        return username
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError(
-                "El email ya está en uso. Por favor elige un email diferente.")
-        return email
-
-    def clean_password2(self):
-        password = self.cleaned_data.get("password")
-        if password:
-            if len(password) < 8:
-                raise forms.ValidationError(
-                    "La contraseña debe tener al menos 8 caracteres")
-            if not re.search(r'[A-Z]', password):
-                raise forms.ValidationError(
-                    "La contraseña debe contener al menos una letra mayúscula")
-            if not re.search(r'[a-z]', password):
-                raise forms.ValidationError(
-                    "La contraseña debe contener al menos una letra minúscula")
-            if not re.search(r'\d', password):
-                raise forms.ValidationError(
-                    "La contraseña debe contener al menos un número")
-            if not re.search(r'[!@#$%^&*()_+]', password):
-                raise forms.ValidationError(
-                    "La contraseña debe contener al menos un caracter especial")
-
-        password2 = self.cleaned_data.get("password2")
-        if password and password2 and password != password2:
-            raise forms.ValidationError("Las contraseñas no coinciden")
-
-        return password
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-        return user
+    def post(self, request):
+        data = request.POST
+        score = data.get("score")
+        user = CustomUser.objects.get(id=request.user.id)
+        GameScore.objects.create(score=score, user=user)
+        return JsonResponse({"status": "success"})
 
 
-class UserUpdateForm(forms.ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'profile_avatar']
-        labels = {
-            'username': 'Usuario',
-            'profile_avatar': 'Avatar',
-        }
+class GetTopScoreView(EmailVerifiedRequiredMixin, View):
+    def get(self, request):
+        top_10_scores = GameScore.objects.all().order_by('-score')[:10]
+        data = []
+        for score in top_10_scores:
+            user = CustomUser.objects.get(id=score.user.id)
+            data.append({
+                "score": score.score,
+                "username": user.username,
+                "profile_avatar": user.profile_avatar.url if user.profile_avatar else None
+            })
+        return JsonResponse({"scores": data}, safe=False)
