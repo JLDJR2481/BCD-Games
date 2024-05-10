@@ -6,9 +6,13 @@ from django.utils.translation import get_language
 from django.contrib import messages
 from .models import Game
 
+from gamesPosts.models import Post
+
 from django.http import JsonResponse
 
 from operator import itemgetter
+
+from django.core.paginator import Paginator
 
 from redis import Redis
 import dotenv
@@ -30,9 +34,16 @@ def gameSearch(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         consulta = request.GET.get("term")
         games = Game.objects.filter(
-            name__startswith=consulta).values_list('name', flat=True)
-        resultados = [game for game in games]
-        return JsonResponse(resultados, safe=False)
+            name__startswith=consulta).order_by("-search_count").values_list('name', "search_count")
+        resultados = [{'name': game[0], 'search_count': game[1]}
+                      for game in games]
+
+        if resultados and resultados[0]['search_count'] > 0:
+            resultados[0]['name'] = f"{resultados[0]['name']} (Más buscado)"
+
+        game_names = [resultado["name"] for resultado in resultados]
+
+        return JsonResponse(game_names, safe=False)
     return JsonResponse({}, safe=False)
 
 
@@ -87,6 +98,9 @@ class ResultsListView(BaseView, ListView):
 
     def post(self, request, *args, **kwargs):
         input = request.POST.get('searchEngineInput')
+
+        input = input.replace("(Más buscado)", "").strip()
+
         games = self.get_game(input)
         if not games:
             messages.error(
@@ -120,6 +134,11 @@ class ResultDetailView(BaseView, DetailView):
     def get(self, request, game_id):
         input_game_id = int(game_id)
 
+        counter_game = Game.objects.get(id=input_game_id)
+
+        counter_game.search_count += 1
+        counter_game.save()
+
         game = Game.objects.filter(id=input_game_id).values().first()
 
         searched_games = request.session.get("searched_games", [])
@@ -138,4 +157,20 @@ class ResultDetailView(BaseView, DetailView):
 
         ratings = sorted(game_ratings, key=itemgetter('id'), reverse=True)
 
-        return render(request, "searchEngine/details.html", {"game": game, "description": description, "ratings": ratings})
+        posts = Post.objects.filter(game=game["id"]).values().count()
+
+        return render(request, "searchEngine/details.html", {"game": game, "description": description, "ratings": ratings, "posts": posts})
+
+
+class GamePostsListView(BaseView, ListView):
+    paginate_by = 12
+    template_name = "searchEngine/game_posts.html"
+
+    def get(self, request, game_id):
+        posts_list = Post.objects.filter(game=game_id)
+        paginator = Paginator(posts_list, self.paginate_by)
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, "searchEngine/game_posts.html", {"page_obj": page_obj})
