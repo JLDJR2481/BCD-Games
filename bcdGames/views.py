@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.core.mail import send_mail
+from django.contrib.auth import login
 from searchEngine.models import CustomUser
 from .forms import UserLoginForm, UserRegisterForm, UserUpdateForm
 import os
@@ -82,6 +83,7 @@ class UserVerifyView(View):
         if user and active_code == int(input_code):
             user.email_verified = True
             user.save()
+            login(request, user)
             return redirect("home")
         else:
             messages.error(
