@@ -23,6 +23,7 @@ class HomeBlogView(ListView):
     model = Post
     paginate_by = 10
     template_name = "posts/home.html"
+    ordering = ['-publication_date']
 
 
 class PostDetailView(DetailView):
@@ -73,6 +74,7 @@ class PostDetailView(DetailView):
             "user_has_liked": user_has_liked,
             "likes_count": likes_count,
             "comments_count": comments_count,
+            "game": post.game
         })
 
 
