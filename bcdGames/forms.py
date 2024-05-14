@@ -93,11 +93,16 @@ class UserRegisterForm(forms.ModelForm):
         return user
 
 
-class UserUpdateForm(forms.ModelForm):
+class UserUpdateAvatarForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'profile_avatar']
+        fields = ['profile_avatar']
         labels = {
-            'username': 'Usuario',
             'profile_avatar': 'Avatar',
         }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+        return user

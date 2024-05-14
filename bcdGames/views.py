@@ -7,9 +7,10 @@ from django.views.generic.edit import FormView
 from django.core.mail import send_mail
 from django.contrib.auth import login
 from searchEngine.models import CustomUser
-from .forms import UserLoginForm, UserRegisterForm, UserUpdateForm
+from .forms import UserLoginForm, UserRegisterForm, UserUpdateAvatarForm
 import os
 import random
+import re
 
 
 class RootView(View):
@@ -77,7 +78,7 @@ class UserVerifyView(View):
 
     def post(self, request):
         input_code = request.POST.get("verification-code")
-        user = CustomUser.objects.get(id=request.session["user_id"])
+        user = CustomUser.objects.get(id=request.user.id)
         active_code = user.active_code
 
         if user and active_code == int(input_code):
@@ -96,13 +97,80 @@ class UserUpdateView(View):
         return render(request, "users/edit-profile.html")
 
     def post(self, request):
-        form = UserUpdateForm(request.POST, request.FILES,
-                              instance=request.user)
-        if form.is_valid():
-            form.save()
-        else:
-            form = UserUpdateForm(instance=request.user)
-        return render(request, "users/edit-profile.html", {"form": form})
+        profile_avatar = request.FILES.get("profile_avatar")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        old_password = request.POST.get("password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        user = CustomUser.objects.get(id=request.user.id)
+
+        avatarForm = UserUpdateAvatarForm(
+            request.POST, request.FILES, instance=request.user)
+
+        if profile_avatar:
+            if avatarForm.is_valid():
+                avatarForm.save()
+                messages.info(
+                    request, "Avatar actualizado correctamente.")
+
+        if username and username != user.username:
+            if CustomUser.objects.filter(username=username).exists():
+                messages.error(
+                    request, "El nombre de usuario ya está en uso. Por favor, elige un nombre de usuario diferente.")
+            else:
+                user.username = username
+                messages.info(
+                    request, "Nombre de usuario actualizado correctamente.")
+
+        if email and email != user.email:
+            if CustomUser.objects.filter(email=email).exists():
+                messages.error(
+                    request, "El email ya está en uso. Por favor, elige un email diferente.")
+            else:
+                user.email = email
+                code = random.randint(0, 999999)
+                user.active_code = code
+                user.email_verified = False
+                send_mail(
+                    "Código de verificación BCD-Games",
+                    f"Utiliza este código para verificar tu nuevo email: {code}",
+                    "bcd.games2001@gmail.com",
+                    [f"{email}"],
+                    auth_password=os.environ.get("SMTP_APP_PASS")
+                )
+                messages.info(
+                    request, "Email actualizado correctamente. Acuérdate de verificar tu nuevo email.")
+
+        if user.check_password(old_password):
+            if new_password and user.check_password(old_password) != user.check_password(new_password):
+                if len(new_password) < 8:
+                    messages.error(
+                        request, "La nueva contraseña debe tener al menos 8 caracteres")
+                if not re.search(r'[A-Z]', new_password):
+                    messages.error(
+                        request, "La nueva contraseña debe contener al menos una letra mayúscula")
+                if not re.search(r'[a-z]', new_password):
+                    messages.error(
+                        request, "La nueva contraseña debe contener al menos una letra minúscula")
+                if not re.search(r'\d', new_password):
+                    messages.error(
+                        request, "La nueva contraseña debe contener al menos un número")
+                if not re.search(r'[!@#$%^&*()_+]', new_password):
+                    messages.error(
+                        request, "La nueva contraseña debe contener al menos un caracter especial")
+                else:
+                    if new_password == confirm_password:
+                        user.set_password(new_password)
+                        messages.info(
+                            request, "Contraseña actualizada correctamente.")
+                    else:
+                        messages.error(
+                            request, "Las contraseñas no coinciden. Por favor, inténtalo de nuevo.")
+
+        user.save()
+        return render(request, "users/edit-profile.html")
 
 
 class ForgotPasswordEmailView(View):
