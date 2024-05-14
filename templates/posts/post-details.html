@@ -15,8 +15,8 @@
             {% if author.profile_avatar %}
             <img src="{{ author.profile_avatar.url }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
             {% endif %}
-            <p class="mt-2">Escrito por {{ author.username }}</p>
-            <p class="text-muted">Tiene relación con el juego: {{game.name}}</p>
+            <p class="mt-2">Escrito por <a href="{% url 'users-posts' author.id %}">{{ author.username }}.</a></p>
+            <p class=" text-muted">Videojuego: <a href="{% url 'details' game.id %}">{{game.name}}</a></p>
 
             <div>
                 <div>Compartir en: </div>

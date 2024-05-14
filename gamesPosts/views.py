@@ -78,7 +78,7 @@ class PostDetailView(DetailView):
         })
 
 
-class PostLike(EmailVerifiedRequiredMixin, View):
+class PostLikeView(EmailVerifiedRequiredMixin, View):
     def get(self, request, post_id):
         return redirect('post-details', post_id=post_id)
 
@@ -96,7 +96,7 @@ class PostLike(EmailVerifiedRequiredMixin, View):
         return redirect('post-details', post_id=post_id)
 
 
-class PostComment(EmailVerifiedRequiredMixin, View):
+class PostCommentView(EmailVerifiedRequiredMixin, View):
     def get(self, request, post_id):
         return redirect('post-details', post_id=post_id)
 
@@ -111,7 +111,7 @@ class PostComment(EmailVerifiedRequiredMixin, View):
         return redirect('post-details', post_id=post_id)
 
 
-class CreatePost(EmailVerifiedRequiredMixin, View):
+class CreatePostView(EmailVerifiedRequiredMixin, View):
     model = Post
     fields = ["title", "content", "visual_content", "game"]
     template_name = "posts/create-post.html"
@@ -138,7 +138,7 @@ class CreatePost(EmailVerifiedRequiredMixin, View):
         return redirect('gamesPosts')
 
 
-class ListOwnPost(EmailVerifiedRequiredMixin, ListView):
+class ListOwnPostView(EmailVerifiedRequiredMixin, ListView):
     model = Post
     paginate_by = 10
     template_name = "posts/my-posts.html"
@@ -147,7 +147,7 @@ class ListOwnPost(EmailVerifiedRequiredMixin, ListView):
         return Post.objects.filter(author=self.request.user)
 
 
-class UpdateOwnPost(EmailVerifiedRequiredMixin, View):
+class UpdateOwnPostView(EmailVerifiedRequiredMixin, View):
     model = Post
     fields = ["title", "content", "visual_content", "game"]
     template_name = "posts/edit-post.html"
@@ -173,7 +173,7 @@ class UpdateOwnPost(EmailVerifiedRequiredMixin, View):
         return redirect('my-posts')
 
 
-class DeleteOwnPost(EmailVerifiedRequiredMixin, View):
+class DeleteOwnPostView(EmailVerifiedRequiredMixin, View):
     model = Post
     template_name = "posts/delete-post.html"
 
@@ -185,3 +185,13 @@ class DeleteOwnPost(EmailVerifiedRequiredMixin, View):
         post = Post.objects.get(id=post_id)
         post.delete()
         return redirect('my-posts')
+
+
+class IndividualUserPostView(View):
+    model = Post
+    template = "posts/individual-user-posts.html"
+
+    def get(self, request, user_id):
+        user = CustomUser.objects.get(id=user_id)
+        posts = Post.objects.filter(author=user).order_by('-publication_date')
+        return render(request, self.template, {"posts": posts, "user": user})

@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Posts de {{user.username}}{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar.html" %}
+{% endblock navbar %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Posts creados por {{user.username}}</h1>
+            {%if user.profile_avatar%}
+            <img src="{{user.profile_avatar.url}}" class="rounded-circle mx-auto d-block"
+                style="width: 100px; height: 100px;">
+            {%else%}
+            <img src="{% static 'image/default-avatar.png' %}" class="rounded-circle mx-auto d-block"
+                style="width: 100px; height: 100px;">
+            {%endif%}
+        </div>
+    </div>
+    <div class="row mt-4">
+        {% for post in posts %}
+        <div class="col-md-6">
+            <div class="card mb-4 rounded">
+                <div class="card-body text-center d-flex flex-column justify-content-center post-result-container">
+                    <h5 class="card-title align-self-center" style="min-height: 75px;">{{ post.title }}</h5>
+
+                    <h6 class="card-subtitle mb-2 text-muted">Escrito hace
+                        {{post.publication_date|timesince}}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Videojuego: {{post.game}}</h6>
+                    <a href="{% url 'post-details' post_id=post.id %}" class="btn btn-primary">Ver post</a>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:3%}
+    </div>
+    <div class="row">
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
