@@ -32,14 +32,3 @@ class Game(models.Model):
 
     def get_post_count(self):
         return Post.objects.filter(game=self).count()
-
-
-class CustomUser(AbstractUser):
-    profile_avatar = models.ImageField(
-        upload_to="avatars/", null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    active_code = models.IntegerField(null=True)
-    email_verified = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.username

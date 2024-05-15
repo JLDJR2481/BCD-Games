@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'searchEngine',
     'gamesPosts',
     'game',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +133,7 @@ STATIC_TMP = os.path.join(BASE_DIR / 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'searchEngine.CustomUser'
+AUTH_USER_MODEL = 'user.CustomUser'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = "/media/"

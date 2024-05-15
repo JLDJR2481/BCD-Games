@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate, login
-from searchEngine.models import CustomUser
+from user.models import CustomUser, UserImage
 import re
 
 
@@ -95,14 +95,19 @@ class UserRegisterForm(forms.ModelForm):
 
 class UserUpdateAvatarForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
-        fields = ['profile_avatar']
+        model = UserImage
+        fields = ['image']
         labels = {
-            'profile_avatar': 'Avatar',
+            'image': 'Avatar',
         }
 
     def save(self, commit=True):
-        user = super().save(commit=False)
+        new_image = super().save(commit=False)
+        old_image = self.instance.image
+
         if commit:
-            user.save()
-        return user
+            if old_image and old_image != new_image.image:
+                old_image.delete()
+            new_image.save()
+
+        return new_image

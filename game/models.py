@@ -1,5 +1,5 @@
 from django.db import models
-from searchEngine.models import CustomUser
+from user.models import CustomUser
 
 
 class GameScore(models.Model):

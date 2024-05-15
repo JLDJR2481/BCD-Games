@@ -24,9 +24,9 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <div class="d-flex justify-content-center flex-column align-items-center">
-                        {% if user.profile_avatar %}
+                        {% if user.userimage_set.exists %}
                         <h2 class="text-center">Avatar</h2>
-                        <img id="output" src="{{ user.profile_avatar.url }}" width="300" class="mb-3">
+                        <img id="output" src="{{ user.userimage_set.first.image.url }}" width="300" class="mb-3">
                         {% else %}
                         <img id="output" width="300" class="mb-3">
                         {% endif %}

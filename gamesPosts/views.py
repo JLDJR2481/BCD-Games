@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from .models import Post, Comment, Like
-from searchEngine.models import CustomUser
+from user.models import CustomUser
 from django.views import View
 from searchEngine.models import Game
 from django.http import JsonResponse

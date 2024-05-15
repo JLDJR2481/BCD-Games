@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
 from .models import GameScore
-from searchEngine.models import CustomUser
+from user.models import CustomUser
 from bcdGames.mixins import EmailVerifiedRequiredMixin
 
 
