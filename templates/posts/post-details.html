@@ -12,11 +12,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 text-center">
-            {% if user.userimage_set.exists %}
-            <img src="{{ user.userimage_set.first.image.url }}" class="rounded-circle" alt="Profile Avatar"
-                width="25%" />
+            {% if user.userimage.image %}
+            <img src="/media/{{ user.userimage.image }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
             {% endif %}
-            <p class="mt-2">Escrito por <a href="{% url 'users-posts' author.id %}">{{ author.username }}.</a></p>
+            <p class=" mt-2">Escrito por <a href="{% url 'users-posts' author.id %}">{{ author.username }}.</a></p>
             <p class=" text-muted">Videojuego: <a href="{% url 'details' game.id %}">{{game.name}}</a></p>
 
             <div>
@@ -94,8 +93,8 @@
                             {% else %}
                             <p style="font-size: 12px; margin-bottom: 5px;">{{ comment.user.username }}</p>
                             {% endif %}
-                            {% if comment.user.userimage_set.exists %}
-                            <img src="{{comment.user.userimage_set.first.image.url}}" alt="User Logo"
+                            {% if comment.user.userimage.image %}
+                            <img src="/media/{{comment.user.userimage.image}}" alt="User Logo"
                                 style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
                             {% else %}
                             <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
@@ -117,8 +116,8 @@
                                 <div class="form-group row">
                                     <div class="col-sm-2 d-flex justify-content-center align-items-center">
                                         <label for="comment">
-                                            {% if user.userimage_set.exists %}
-                                            <img src="{{user.userimage_set.first.image.url}}" alt="User Logo"
+                                            {% if user.userimage.image %}
+                                            <img src="/media/{{user.userimage.image}}" alt="User Logo"
                                                 style="width: 50px; height: 50px; border-radius: 50%;"
                                                 id="profileAvatar">
 

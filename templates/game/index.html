@@ -98,7 +98,7 @@
                             userImage.alt = "Profile Image";
 
                             if (score.profile_avatar)
-                                userImage.src = score.profile_avatar;
+                                userImage.src = "/media/" + score.profile_avatar;
                             else
                                 userImage.src = "{% static 'images/default-avatar.png' %}";
 

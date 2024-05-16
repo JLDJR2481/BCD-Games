@@ -54,7 +54,7 @@
   #login-card,
   #register-card {
     transition: all 0.25s ease-in-out;
-    background-color: #292929;
+    background-color: #404040;
     color: #ffffff;
   }
 
@@ -81,7 +81,13 @@
     background-color: #292929;
     color: #ffffff;
   }
+
+  .modal-content {
+    background-color: #292929;
+    color: #ffffff;
+  }
 }
+
 #light {
   transition: all 0.25s ease-in-out;
   background-color: #f2f2f2;
@@ -162,6 +168,10 @@
   #highScoreTable thead tr,
   #highScoreTable tbody tr {
     transition: all 0.25s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+  .modal-content {
     background-color: #f2f2f2;
     color: #000000;
   }

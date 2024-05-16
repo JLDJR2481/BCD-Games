@@ -7,10 +7,11 @@ from django.views.generic.edit import FormView
 from django.core.mail import send_mail
 from django.contrib.auth import login
 from user.models import CustomUser, UserImage
-from .forms import UserLoginForm, UserRegisterForm, UserUpdateAvatarForm
+from .forms import UserLoginForm, UserRegisterForm
 import os
 import random
 import re
+from django.conf import settings
 
 
 class UserLoginView(LoginView):
@@ -89,10 +90,13 @@ class UserVerifyView(View):
 
 class UserUpdateView(View):
     def get(self, request):
-        return render(request, "users/edit-profile.html")
+        avatar_dir = os.path.join(settings.MEDIA_ROOT, "avatars")
+        avatars = [os.path.join(settings.MEDIA_URL, "avatars", avatar)
+                   for avatar in os.listdir(avatar_dir)]
+        return render(request, "users/edit-profile.html", {"avatars": avatars})
 
     def post(self, request):
-        profile_avatar = request.FILES.get("profile_avatar")
+        avatar = request.POST.get("avatar")
         username = request.POST.get("username")
         email = request.POST.get("email")
         old_password = request.POST.get("password")
@@ -101,16 +105,15 @@ class UserUpdateView(View):
 
         user = CustomUser.objects.get(id=request.user.id)
 
-        if profile_avatar:
-            if user.userimage_set.exists():
-                user_image = user.userimage_set.first()
-                user_image.image.delete()
-
+        if avatar:
+            filename = os.path.join("avatars/", os.path.basename(avatar))
+            if hasattr(user, 'userimage'):
+                user_image = user.userimage
+                user_image.image = filename
+                user_image.save()
             else:
-                user_image = UserImage(user=user)
+                UserImage.objects.create(user=user, image=filename)
 
-            user_image.image = profile_avatar
-            user_image.save()
             messages.info(request, "Avatar actualizado correctamente.")
 
         if username and username != user.username:

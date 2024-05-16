@@ -10,8 +10,8 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="text-center">Posts creados por {{user.username}}</h1>
-            {%if user.userimage_set.exists%}
-            <img src="{{ user.userimage_set.first.image.url}}" class="rounded-circle mx-auto d-block"
+            {%if user.userimage.image %}
+            <img src="/media/{{ user.userimage.image }}" class="rounded-circle mx-auto d-block"
                 style="width: 100px; height: 100px;">
             {%else%}
             <img src="{% static 'image/default-avatar.png' %}" class="rounded-circle mx-auto d-block"

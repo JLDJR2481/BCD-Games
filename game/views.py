@@ -33,6 +33,6 @@ class GetTopScoreView(EmailVerifiedRequiredMixin, View):
             data.append({
                 "score": score.score,
                 "username": user.username,
-                "profile_avatar": user.profile_avatar.url if user.profile_avatar else None
+                "profile_avatar": user.userimage.image if user.userimage else None
             })
         return JsonResponse({"scores": data}, safe=False)

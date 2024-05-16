@@ -38,8 +38,8 @@
                 {% if user.is_authenticated %}
                 <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser"
                     aria-controls="offcanvasUser" id="canvasButton">
-                    {% if user.userimage_set.exists %}
-                    <img src="{{user.userimage_set.first.image.url}}" alt="User Logo"
+                    {% if user.userimage.image %}
+                    <img src="/media/{{ user.userimage.image }}" alt="User Logo"
                         style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
                     {% else %}
                     <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"

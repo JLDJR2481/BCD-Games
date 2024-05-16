@@ -102,12 +102,10 @@ class UserUpdateAvatarForm(forms.ModelForm):
         }
 
     def save(self, commit=True):
-        new_image = super().save(commit=False)
-        old_image = self.instance.image
+        user_image = super().save(commit=False)
+        user_image.image = self.cleaned_data.get('avatar')
 
         if commit:
-            if old_image and old_image != new_image.image:
-                old_image.delete()
-            new_image.save()
+            user_image.save()
 
-        return new_image
+        return user_image
