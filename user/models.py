@@ -12,5 +12,5 @@ class CustomUser(AbstractUser):
 
 
 class UserImage(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    image = models.CharField(max_length=255)
