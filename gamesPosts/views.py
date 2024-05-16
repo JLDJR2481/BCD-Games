@@ -35,14 +35,18 @@ class PostDetailView(DetailView):
 
         author = CustomUser.objects.get(id=post.author_id)
         comments = Comment.objects.filter(
-            post=post).order_by('-comment_date').values()
+            post=post, parent_comment__isnull=True).order_by("-comment_date").values()
         likes = Like.objects.filter(post=post).values()
+
+        subcomments = Comment.objects.filter(
+            post=post, parent_comment__isnull=False).values()
 
         comments_data = []
         likes_data = []
 
-        for comment in comments:
+        subcomments_data = []
 
+        for comment in comments:
             user = CustomUser.objects.get(id=comment["user_id"])
             comment_data = {
                 "user": user,
@@ -57,6 +61,16 @@ class PostDetailView(DetailView):
                 "user": user
             }
             likes_data.append(like_data)
+
+        for subcomment in subcomments:
+            user = CustomUser.objects.get(id=subcomment["user_id"])
+            subcomment_data = {
+                "user": user,
+                "content": subcomment["content"],
+                "comment_date": subcomment["comment_date"],
+                "parent_comment": subcomment["parent_comment_id"]
+            }
+            subcomments_data.append(subcomment_data)
 
         if request.user.is_authenticated:
             user_has_liked = post.user_has_liked(request.user)
@@ -74,6 +88,7 @@ class PostDetailView(DetailView):
             "user_has_liked": user_has_liked,
             "likes_count": likes_count,
             "comments_count": comments_count,
+            "subcomments": subcomments_data,
             "game": post.game
         })
 
@@ -192,6 +207,24 @@ class IndividualUserPostView(View):
     template = "posts/individual-user-posts.html"
 
     def get(self, request, user_id):
-        user = CustomUser.objects.get(id=user_id)
-        posts = Post.objects.filter(author=user).order_by('-publication_date')
-        return render(request, self.template, {"posts": posts, "user": user})
+        author = CustomUser.objects.get(id=user_id)
+        posts = Post.objects.filter(
+            author=author).order_by('-publication_date')
+        return render(request, self.template, {"posts": posts, "author": author})
+
+
+class SubCommentView(EmailVerifiedRequiredMixin, View):
+    def get(self, post_id):
+        return redirect('post-details', post_id=post_id)
+
+    def post(self, request, post_id, comment_id):
+        post = Post.objects.get(id=post_id)
+        user = request.user
+        content = request.POST.get("comment")
+        parent_comment = Comment.objects.get(id=comment_id)
+
+        comment = Comment(user=user, post=post, content=content,
+                          parent_comment=parent_comment)
+        comment.save()
+
+        return redirect('post-details', post_id=post_id)
