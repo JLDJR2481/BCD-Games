@@ -12,8 +12,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 text-center">
-            {% if user.userimage.image %}
-            <img src="/media/{{ user.userimage.image }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
+            {% if author.userimage.image %}
+            <img src="/media/{{ author.userimage.image }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
             {% endif %}
             <p class=" mt-2">Escrito por <a href="{% url 'users-posts' author.id %}">{{ author.username }}.</a></p>
             <p class=" text-muted">Videojuego: <a href="{% url 'details' game.id %}">{{game.name}}</a></p>

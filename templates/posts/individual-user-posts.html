@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% block title %}Posts de {{user.username}}{% endblock %}
+{% block title %}Posts de {{author.username}}{% endblock %}
 
 {% block content %}
 {% block navbar %}
@@ -9,12 +9,12 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="text-center">Posts creados por {{user.username}}</h1>
-            {%if user.userimage.image %}
-            <img src="/media/{{ user.userimage.image }}" class="rounded-circle mx-auto d-block"
+            <h1 class="text-center">Posts creados por {{author.username}}</h1>
+            {%if author.userimage.image %}
+            <img src="/media/{{ author.userimage.image }}" class="rounded-circle mx-auto d-block"
                 style="width: 100px; height: 100px;">
             {%else%}
-            <img src="{% static 'image/default-avatar.png' %}" class="rounded-circle mx-auto d-block"
+            <img src="{% static 'images/default-avatar.png' %}" class="rounded-circle mx-auto d-block"
                 style="width: 100px; height: 100px;">
             {%endif%}
         </div>
