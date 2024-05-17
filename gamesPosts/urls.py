@@ -11,6 +11,11 @@ urlpatterns = [
          CommentLikeView.as_view(), name="comment-like"),
     path("comment/<int:comment_id>/subcomment/",
          SubCommentView.as_view(), name="subcomment"),
+    path("comment/edit/<int:comment_id>/",
+         EditCommentView.as_view(), name="edit-comment"),
+    path("comment/delete/<int:comment_id>/",
+         DeleteCommentView.as_view(), name="delete-comment"),
+
     path('create-post/', CreatePostView.as_view(), name="create-post"),
     path('my-posts/', ListOwnPostView.as_view(), name="my-posts"),
     path('edit-post/<int:post_id>/', UpdateOwnPostView.as_view(), name="edit-post"),

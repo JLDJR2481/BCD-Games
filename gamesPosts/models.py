@@ -27,6 +27,7 @@ class Post(models.Model):
 class Comment(models.Model):
     content = models.TextField()
     comment_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey("user.CustomUser",
                              on_delete=models.CASCADE)

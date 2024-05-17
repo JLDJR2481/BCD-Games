@@ -33,6 +33,8 @@ class PostDetailView(DetailView):
     def get(self, request, post_id):
         post = Post.objects.get(id=post_id)
 
+        post_last_update_date = post.last_update_date if post.last_update_date != post.publication_date else None
+
         author = CustomUser.objects.get(id=post.author_id)
         comments = Comment.objects.all()
 
@@ -55,11 +57,15 @@ class PostDetailView(DetailView):
                 id=comment["id"]).count_likes()
             subcomments_count = Comment.objects.get(
                 id=comment["id"]).count_subcomments()
+
+            last_update = comment["update_date"] if comment["update_date"] != comment["comment_date"] else None
+
             comment_data = {
                 "id": comment["id"],
                 "user": user,
                 "content": comment["content"],
                 "comment_date": comment["comment_date"],
+                "last_update": last_update,
                 "likes_count": comment_like_count,
                 "subcomments_count": subcomments_count
             }
@@ -79,11 +85,14 @@ class PostDetailView(DetailView):
             subcomment_likes = Comment.objects.get(
                 id=subcomment["id"]).count_likes()
 
+            last_update = subcomment["update_date"] if subcomment["update_date"] != subcomment["comment_date"] else None
+
             subcomment_data = {
                 "id": subcomment["id"],
                 "user": user,
                 "content": subcomment["content"],
                 "comment_date": subcomment["comment_date"],
+                "last_update": last_update,
                 "parent_comment": parent_comment,
                 "subcomment_likes": subcomment_likes
             }
@@ -103,7 +112,8 @@ class PostDetailView(DetailView):
         comments_count = post.count_comments()
 
         return render(request, self.template_name, {
-            'post': post,
+            "post": post,
+            "post_last_update_date": post_last_update_date,
             "author": author,
             "comments": parent_comments_data,
             "likes": likes_data,
@@ -179,6 +189,30 @@ class SubCommentView(EmailVerifiedRequiredMixin, View):
                           parent_comment=parent_comment)
         comment.save()
 
+        return redirect('post-details', post_id=post_id)
+
+
+class EditCommentView(EmailVerifiedRequiredMixin, View):
+    def get(self, request, comment_id):
+        comment = Comment.objects.get(id=comment_id)
+        return render(request, "posts/edit-comment.html", {"comment": comment})
+
+    def post(self, request, comment_id):
+        comment = Comment.objects.get(id=comment_id)
+        comment.content = request.POST.get("content")
+        comment.save()
+        return redirect('post-details', post_id=comment.post.id)
+
+
+class DeleteCommentView(EmailVerifiedRequiredMixin, View):
+    def get(self, request, comment_id):
+        comment = Comment.objects.get(id=comment_id)
+        return render(request, "posts/delete-comment.html", {"comment": comment})
+
+    def post(self, request, comment_id):
+        comment = Comment.objects.get(id=comment_id)
+        post_id = comment.post.id
+        comment.delete()
         return redirect('post-details', post_id=post_id)
 
 
