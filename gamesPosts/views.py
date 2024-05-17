@@ -34,46 +34,68 @@ class PostDetailView(DetailView):
         post = Post.objects.get(id=post_id)
 
         author = CustomUser.objects.get(id=post.author_id)
-        comments = Comment.objects.filter(
-            post=post, parent_comment__isnull=True).order_by("-comment_date").values()
-        likes = Like.objects.filter(post=post).values()
+        comments = Comment.objects.all()
 
-        subcomments = Comment.objects.filter(
-            post=post, parent_comment__isnull=False).values()
+        parent_comments = comments.filter(post=post, parent_comment__isnull=True).order_by(
+            "-comment_date")
 
-        comments_data = []
+        likes = Like.objects.filter(post=post)
+
+        child_comments = comments.filter(
+            post=post, parent_comment__isnull=False)
+
+        parent_comments_data = []
         likes_data = []
 
-        subcomments_data = []
+        child_comments_data = []
 
-        for comment in comments:
+        for comment in parent_comments.values():
             user = CustomUser.objects.get(id=comment["user_id"])
+            comment_like_count = Comment.objects.get(
+                id=comment["id"]).count_likes()
+            subcomments_count = Comment.objects.get(
+                id=comment["id"]).count_subcomments()
             comment_data = {
+                "id": comment["id"],
                 "user": user,
                 "content": comment["content"],
-                "comment_date": comment["comment_date"]
+                "comment_date": comment["comment_date"],
+                "likes_count": comment_like_count,
+                "subcomments_count": subcomments_count
             }
-            comments_data.append(comment_data)
+            parent_comments_data.append(comment_data)
 
-        for like in likes:
+        for like in likes.values():
             user = CustomUser.objects.get(id=like["user_id"])
             like_data = {
                 "user": user
             }
             likes_data.append(like_data)
 
-        for subcomment in subcomments:
+        for subcomment in child_comments.values():
             user = CustomUser.objects.get(id=subcomment["user_id"])
+            parent_comment = Comment.objects.get(
+                id=subcomment["parent_comment_id"])
+            subcomment_likes = Comment.objects.get(
+                id=subcomment["id"]).count_likes()
+
             subcomment_data = {
+                "id": subcomment["id"],
                 "user": user,
                 "content": subcomment["content"],
                 "comment_date": subcomment["comment_date"],
-                "parent_comment": subcomment["parent_comment_id"]
+                "parent_comment": parent_comment,
+                "subcomment_likes": subcomment_likes
             }
-            subcomments_data.append(subcomment_data)
+            child_comments_data.append(subcomment_data)
+
+        user_liked_comments_id = []
 
         if request.user.is_authenticated:
             user_has_liked = post.user_has_liked(request.user)
+            for comment in comments:
+                if comment.user_has_liked_comment(request.user):
+                    user_liked_comments_id.append(comment.id)
         else:
             user_has_liked = False
 
@@ -83,12 +105,13 @@ class PostDetailView(DetailView):
         return render(request, self.template_name, {
             'post': post,
             "author": author,
-            "comments": comments_data,
+            "comments": parent_comments_data,
             "likes": likes_data,
             "user_has_liked": user_has_liked,
+            "user_liked_comments_id": user_liked_comments_id,
             "likes_count": likes_count,
             "comments_count": comments_count,
-            "subcomments": subcomments_data,
+            "subcomments": child_comments_data,
             "game": post.game
         })
 
@@ -121,6 +144,39 @@ class PostCommentView(EmailVerifiedRequiredMixin, View):
         content = request.POST.get("comment")
 
         comment = Comment(user=user, post=post, content=content)
+        comment.save()
+
+        return redirect('post-details', post_id=post_id)
+
+
+class CommentLikeView(EmailVerifiedRequiredMixin, View):
+    def post(self, request, comment_id):
+
+        comment = Comment.objects.get(id=comment_id)
+        user = request.user
+
+        if comment.user_has_liked_comment(user):
+            like = Like.objects.get(user=user, comment=comment)
+            like.delete()
+        else:
+            like = Like(user=user, comment=comment)
+            like.save()
+
+        return redirect('post-details', post_id=comment.post.id)
+
+
+class SubCommentView(EmailVerifiedRequiredMixin, View):
+    def post(self, request, comment_id):
+        post = Comment.objects.get(id=comment_id).post
+
+        post_id = post.id
+
+        user = request.user
+        content = request.POST.get("comment")
+        parent_comment = Comment.objects.get(id=comment_id)
+
+        comment = Comment(user=user, post=post, content=content,
+                          parent_comment=parent_comment)
         comment.save()
 
         return redirect('post-details', post_id=post_id)
@@ -211,20 +267,3 @@ class IndividualUserPostView(View):
         posts = Post.objects.filter(
             author=author).order_by('-publication_date')
         return render(request, self.template, {"posts": posts, "author": author})
-
-
-class SubCommentView(EmailVerifiedRequiredMixin, View):
-    def get(self, post_id):
-        return redirect('post-details', post_id=post_id)
-
-    def post(self, request, post_id, comment_id):
-        post = Post.objects.get(id=post_id)
-        user = request.user
-        content = request.POST.get("comment")
-        parent_comment = Comment.objects.get(id=comment_id)
-
-        comment = Comment(user=user, post=post, content=content,
-                          parent_comment=parent_comment)
-        comment.save()
-
-        return redirect('post-details', post_id=post_id)

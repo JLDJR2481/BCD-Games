@@ -42,13 +42,13 @@ class Comment(models.Model):
     def count_subcomments(self):
         return self.comment_set.count()
 
-    def user_has_liked(self, user):
+    def user_has_liked_comment(self, user):
         return self.like_set.filter(user=user).exists()
 
 
 class Like(models.Model):
     user = models.ForeignKey("user.CustomUser",
                              on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     like_date = models.DateTimeField(auto_now_add=True)
