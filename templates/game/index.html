@@ -56,6 +56,7 @@
     function postScore() {
 
         var csrftoken = document.querySelector('#csrfForm [name=csrfmiddlewaretoken]').value;
+        var socialUrlBase = "{% url 'social' 'username_placeholder' %}";
 
         var data = new FormData()
         data.append("csrfmiddlewaretoken", csrftoken)
@@ -106,7 +107,11 @@
 
                             var divUsername = document.createElement("div");
                             divUsername.classList.add("col-sm-6");
-                            divUsername.textContent = score.username;
+                            linkUser = document.createElement("a");
+                            linkUser.href = socialUrlBase.replace('username_placeholder', score
+                                .username);
+                            linkUser.textContent = score.username;
+                            divUsername.appendChild(linkUser);
 
                             divRowUser.appendChild(divUserImage);
                             divRowUser.appendChild(divUsername);

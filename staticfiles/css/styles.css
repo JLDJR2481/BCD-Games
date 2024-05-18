@@ -1,10 +1,10 @@
 #dark {
-  transition: all 0.25s ease-in-out;
+  transition: all 0.5s ease-in-out;
   background-color: #1a1a1a;
   color: #ffffff;
 
   nav:not(#paginator) {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #404040;
     #navbarNav .nav-link {
       color: #ffffff;
@@ -12,7 +12,7 @@
   }
 
   nav .page-link {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #404040;
     color: #ffffff;
     span {
@@ -21,13 +21,13 @@
   }
 
   button.accordion-button {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #292929;
     color: #ffffff;
   }
 
   div.accordion-item {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #404040;
     color: #ffffff;
   }
@@ -47,19 +47,19 @@
   }
 
   .search-box input {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #292929;
     color: #ffffff;
   }
   #login-card,
   #register-card {
-    transition: all 0.25s ease-in-out;
-    background-color: #292929;
+    transition: all 0.5s ease-in-out;
+    background-color: #404040;
     color: #ffffff;
   }
 
   #login-button {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     color: #ffffff;
     cursor: pointer;
   }
@@ -71,24 +71,34 @@
   }
 
   #profileAvatar {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     border: 2px solid white;
   }
 
   #highScoreTable thead tr,
   #highScoreTable tbody tr {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #292929;
     color: #ffffff;
   }
+
+  .modal-content {
+    background-color: #292929;
+    color: #ffffff;
+  }
+
+  .comment_social_url {
+    color: #ffffff;
+  }
 }
+
 #light {
-  transition: all 0.25s ease-in-out;
+  transition: all 0.5s ease-in-out;
   background-color: #f2f2f2;
   color: #000000;
 
   nav:not(#paginator) {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #e8e8e8;
     #navbarNav .nav-link {
       color: #000000;
@@ -96,7 +106,7 @@
   }
 
   nav .page-link {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #e8e8e8;
     color: #000000;
     span {
@@ -105,20 +115,20 @@
   }
 
   button.accordion-button {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #e8e8e8;
     color: #000000;
   }
 
   div.accordion-item {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #f2f2f2;
     color: #000000;
     border: solid 1px #000000;
   }
 
   #login-button {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     color: #000000;
     cursor: pointer;
   }
@@ -142,27 +152,34 @@
     }
   }
   .search-box input {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #f2f2f2;
     color: #000000;
   }
 
   #login-card,
   #register-card {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #f2f2f2;
     color: #000000;
   }
 
   #profileAvatar {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     border: 2px solid black;
   }
 
   #highScoreTable thead tr,
   #highScoreTable tbody tr {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.5s ease-in-out;
     background-color: #f2f2f2;
+    color: #000000;
+  }
+  .modal-content {
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+  .comment_social_url {
     color: #000000;
   }
 }
@@ -187,6 +204,12 @@ nav {
 .game-result-container {
   background-color: #bac78c;
   color: #1a1a1a;
+
+  a.social_link,
+  a.social_link:hover {
+    background-color: #bac78c;
+    color: #6c757d;
+  }
 
   a,
   a:hover {
@@ -264,4 +287,8 @@ p span {
 
 .nav-item.active {
   font-weight: bolder;
+}
+
+a.response_comment_social_url {
+  color: #6c757d;
 }

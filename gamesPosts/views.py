@@ -44,7 +44,7 @@ class PostDetailView(DetailView):
         likes = Like.objects.filter(post=post)
 
         child_comments = comments.filter(
-            post=post, parent_comment__isnull=False)
+            post=post, parent_comment__isnull=False).order_by("-comment_date")
 
         parent_comments_data = []
         likes_data = []
@@ -290,14 +290,3 @@ class DeleteOwnPostView(EmailVerifiedRequiredMixin, View):
         post = Post.objects.get(id=post_id)
         post.delete()
         return redirect('my-posts')
-
-
-class IndividualUserPostView(View):
-    model = Post
-    template = "posts/individual-user-posts.html"
-
-    def get(self, request, user_id):
-        author = CustomUser.objects.get(id=user_id)
-        posts = Post.objects.filter(
-            author=author).order_by('-publication_date')
-        return render(request, self.template, {"posts": posts, "author": author})

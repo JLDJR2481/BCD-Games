@@ -15,7 +15,7 @@
             {% if author.userimage.image %}
             <img src="/media/{{ author.userimage.image }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
             {% endif %}
-            <p class=" mt-2">Escrito por <a href="{% url 'users-posts' author.id %}">{{ author.username }}.</a></p>
+            <p class=" mt-2">Escrito por <a href="{% url 'social' author.username %}">{{ author.username }}.</a></p>
             <p class=" text-muted">Videojuego: <a href="{% url 'details' game.id %}">{{game.name}}</a></p>
 
             <div>
@@ -86,13 +86,17 @@
             <div class="row mt-2">
                 <div class="col-12">
                     {% for comment in comments %}
-                    <div class="row">
+                    <div class="row" id="comment_{{comment.id}}">
                         <div class="col-2 d-flex flex-column justify-content-center align-items-center mt-2">
                             {% if comment.user.id is author.id %}
                             <p style="font-size: 12px; margin-bottom: 5px; font-weight: bolder;">
-                                {{ comment.user.username }} (Autor del post)</p>
+                                <a class="comment_social_url"
+                                    href="{% url 'social' comment.user.username %}">{{comment.user.username}}</a> (Autor
+                                del post)</p>
                             {% else %}
-                            <p style="font-size: 12px; margin-bottom: 5px;">{{ comment.user.username }}</p>
+                            <p style="font-size: 12px; margin-bottom: 5px;">
+                                <a class="comment_social_url"
+                                    href="{% url 'social' comment.user.username %}">{{ comment.user.username }}</a></p>
                             {% endif %}
                             {% if comment.user.userimage.image %}
                             <img src="/media/{{comment.user.userimage.image}}" alt="User Logo"
@@ -184,13 +188,17 @@
                     <hr>
                     {% for subcomment in subcomments %}
                     {% if subcomment.parent_comment.id == comment.id %}
-                    <div class="row" style="padding-left: 40px; font-size: 12px;">
+                    <div class="row" style="padding-left: 40px; font-size: 12px;" id="comment_{{subcomment.id}}">
                         <div class="col-2 d-flex flex-column justify-content-center align-items-center mt-2">
                             {% if subcomment.user.id is author.id %}
                             <p style="font-size: 12px; margin-bottom: 12px; font-weight: bolder;">
-                                {{ subcomment.user.username }} (Autor del post)</p>
+                                <a class="comment_social_url"
+                                    href="{% url 'social' subcomment.user.username %}">{{ subcomment.user.username }}
+                                </a>(Autor del post)</p>
                             {% else %}
-                            <p style="font-size: 12px; margin-bottom: 5px;">{{ subcomment.user.username }}</p>
+                            <p style="font-size: 12px; margin-bottom: 5px;">
+                                <a class="comment_social_url" href="{% url 'social' subcomment.user.username %}">
+                                    {{ subcomment.user.username }}</a></p>
                             {% endif %}
                             {% if subcomment.user.userimage.image %}
                             <img src="/media/{{subcomment.user.userimage.image}}" alt="User Logo"
@@ -210,7 +218,9 @@
 
                         </div>
                         <div class="col-10 d-flex justify-content-center flex-column">
-                            <p class="text-muted">Respuesta a {{subcomment.parent_comment.user.username}}</p>
+                            <p class="text-muted">Respuesta a <a class="response_comment_social_url"
+                                    href="{% url 'social' subcomment.parent_comment.user.username %}">{{subcomment.parent_comment.user.username}}</a>
+                            </p>
                             <pre>{{ subcomment.content|wordwrap:150 }}</pre>
                             <div class="row mb-4">
                                 <div class="col-10 d-flex justify-content-start">

@@ -13,6 +13,9 @@ import random
 import re
 from django.conf import settings
 
+from django.utils import timezone
+from datetime import timedelta
+
 
 class UserLoginView(LoginView):
     template_name = "registration/login.html"
@@ -122,6 +125,7 @@ class UserUpdateView(View):
                     request, "El nombre de usuario ya está en uso. Por favor, elige un nombre de usuario diferente.")
             else:
                 user.username = username
+                user.save()
                 messages.info(
                     request, "Nombre de usuario actualizado correctamente.")
 
@@ -141,6 +145,7 @@ class UserUpdateView(View):
                     [f"{email}"],
                     auth_password=os.environ.get("SMTP_APP_PASS")
                 )
+                user.save()
                 messages.info(
                     request, "Email actualizado correctamente. Acuérdate de verificar tu nuevo email.")
 
@@ -164,14 +169,14 @@ class UserUpdateView(View):
                 else:
                     if new_password == confirm_password:
                         user.set_password(new_password)
+                        user.save()
                         messages.info(
                             request, "Contraseña actualizada correctamente.")
                     else:
                         messages.error(
                             request, "Las contraseñas no coinciden. Por favor, inténtalo de nuevo.")
 
-        user.save()
-        return render(request, "users/edit-profile.html")
+        return redirect("social", username=user.username)
 
 
 class ForgotPasswordEmailView(View):
@@ -238,3 +243,23 @@ class ResetPasswordView(View):
             messages.error(
                 request, "Las contraseñas no coinciden. Por favor, inténtalo de nuevo.")
             return render(request, "registration/reset-password.html")
+
+
+class SocialView(View):
+    template_name = "users/social.html"
+
+    def get(self, request, username):
+        profile_user = CustomUser.objects.get(username=username)
+
+        posts = profile_user.post_set.all().order_by("-publication_date")
+        comments = profile_user.comment_set.all().order_by("-comment_date")
+        likes = profile_user.like_set.all().order_by("-like_date")
+
+        gamescores_data = profile_user.gamescore_set.all().order_by("-date")
+
+        gamescore_date_limit = timezone.now() - timedelta(days=1)
+
+        gamescores = [
+            gamescore for gamescore in gamescores_data if gamescore.date > gamescore_date_limit]
+
+        return render(request, self.template_name, {"profile_user": profile_user, "posts": posts, "comments": comments, "likes": likes, "gamescores": gamescores})

@@ -7,7 +7,8 @@ from .views import (
     UserVerifyView,
     ForgotPasswordEmailView,
     VerifyForgotPasswordView,
-    ResetPasswordView
+    ResetPasswordView,
+    SocialView
 )
 
 
@@ -22,4 +23,5 @@ urlpatterns = [
          name='verify-forgot-password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
     path('update/', UserUpdateView.as_view(), name='update-profile'),
+    path('social/<str:username>/', SocialView.as_view(), name='social'),
 ]

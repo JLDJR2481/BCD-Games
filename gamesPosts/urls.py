@@ -22,6 +22,4 @@ urlpatterns = [
     path('delete-post/<int:post_id>/',
          DeleteOwnPostView.as_view(), name="delete-post"),
     path('search/', search, name="search"),
-    path("users-posts/<int:user_id>/",
-         IndividualUserPostView.as_view(), name="users-posts"),
 ]

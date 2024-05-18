@@ -137,10 +137,9 @@ class ResultDetailView(BaseView, DetailView):
             description = game.get("description")
 
         game_ratings = game.get("ratings")
-        ratings = sorted(game_ratings, key=itemgetter('id'), reverse=True)
         posts = Post.objects.filter(game=game["id"]).values().count()
 
-        return render(request, "searchEngine/details.html", {"game": game, "description": description, "ratings": ratings, "posts": posts})
+        return render(request, "searchEngine/details.html", {"game": game, "description": description, "posts": posts})
 
 
 class GamePostsListView(BaseView, ListView):
