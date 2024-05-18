@@ -55,10 +55,10 @@
 </nav>
 
 <div class=" offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
+                    {% if user.is_authenticated %}
                     <div class="offcanvas-header">
-                        {% if user.is_authenticated %}
                         <h5 class="offcanvas-title" id="offcanvasUserLabel">¡Bienvenido {{user.username}}!</h5>
-                        {% endif %}
+
                         <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
@@ -78,4 +78,5 @@
                             </form>
                         </ul>
                     </div>
+                    {% endif %}
             </div>
