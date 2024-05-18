@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Editar comentario{% endblock %}
+
+{% block content %}
+{% block navbar %}
+{% include "navbars/navbar-post.html" %}
+{% endblock navbar %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">Editar comentario</h1>
+            <form action="{% url 'edit-comment' comment_id=comment.id %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="content" class="form-label">Contenido</label>
+                    <textarea class="form-control" id="content" name="content" rows="5"
+                        required>{{ comment.content }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Editar comentario</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

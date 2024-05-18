@@ -38,8 +38,8 @@
                 {% if user.is_authenticated %}
                 <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser"
                     aria-controls="offcanvasUser" id="canvasButton">
-                    {% if user.profile_avatar %}
-                    <img src="{{user.profile_avatar.url}}" alt="User Logo"
+                    {% if user.userimage.image %}
+                    <img src="/media/{{ user.userimage.image }}" alt="User Logo"
                         style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
                     {% else %}
                     <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
@@ -55,15 +55,20 @@
 </nav>
 
 <div class=" offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasUserLabel">
+                    {% if user.is_authenticated %}
                     <div class="offcanvas-header">
-                        {% if user.is_authenticated %}
                         <h5 class="offcanvas-title" id="offcanvasUserLabel">¡Bienvenido {{user.username}}!</h5>
-                        {% endif %}
+
                         <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <ul class="list-unstyled">
-                            <li><a class="dropdown-item" href="{% url 'update-profile' %}">Editar Perfil</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'social' user.username %}">Mi perfil</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'update-profile' %}">Editar Perfil</a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -73,4 +78,5 @@
                             </form>
                         </ul>
                     </div>
+                    {% endif %}
             </div>

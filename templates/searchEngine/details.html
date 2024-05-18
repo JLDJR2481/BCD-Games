@@ -23,14 +23,14 @@
             <h1 class="text-center">{{game.name}}</h1>
             <div class="row p-1">
                 {% if game.metacritic %}
-                <div class="col-6 d-flex flex-column align-items-center">
+                <div class="col-4 d-flex flex-column align-items-center">
                     <div class="text-center">
                         <h6>Metacritic</h6>
                         <article>{{game.metacritic}}/100</article>
                     </div>
                 </div>
                 {% else %}
-                <div class="col-6 d-flex flex-column align-items-center">
+                <div class="col-4 d-flex flex-column align-items-center">
                     <div class="text-center">
                         <h6>Metacritic</h6>
                         <article>No disponible</article>
@@ -38,15 +38,30 @@
                 </div>
                 {% endif %}
 
+                {% if posts %}
+                <div class="col-4 d-flex flex-column align-items-center">
+                    <h6>Hay {{posts}} post{{posts|pluralize:"s"}} para este juego</h6>
+                    <a href="{% url 'game-posts' game_id=game.id%}"><button type="button" class="btn btn-primary">Ver
+                            posts</button></a>
+                </div>
+                {% else %}
+                <div class="col-4 d-flex flex-column align-items-center">
+                    <h6>No hay posts para este juego</h6>
+                    <a href="{% url 'create-post' %}"><button type="button" class="btn btn-primary">Crea un post
+                        </button></a>
+                </div>
+
+                {% endif %}
+
                 {% if game.average_rating %}
-                <div class="col-6 d-flex flex-column align-items-center">
+                <div class="col-4 d-flex flex-column align-items-center">
                     <div class="text-center">
                         <h6>Valoración media</h6>
                         <article>{{game.average_rating}}/5</article>
                     </div>
                 </div>
                 {% else %}
-                <div class="col-6 d-flex flex-column align-items-center">
+                <div class="col-4 d-flex flex-column align-items-center">
                     <div class="text-center">
                         <h6>Valoración media</h6>
                         <article>No disponible</article>

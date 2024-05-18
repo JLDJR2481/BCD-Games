@@ -1,5 +1,4 @@
 from django.db import models
-from searchEngine.models import Game, CustomUser
 
 
 class Post(models.Model):
@@ -8,8 +7,9 @@ class Post(models.Model):
     visual_content = models.ImageField(upload_to="visual_content/")
     publication_date = models.DateTimeField(auto_now_add=True)
     last_update_date = models.DateTimeField(auto_now=True)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    game = models.ForeignKey("searchEngine.Game", on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        "user.CustomUser", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -27,11 +27,29 @@ class Post(models.Model):
 class Comment(models.Model):
     content = models.TextField()
     comment_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey("user.CustomUser",
+                             on_delete=models.CASCADE)
+    parent_comment = models.ForeignKey("self", on_delete=models.CASCADE,
+                                       null=True, blank=True)
+
+    def get_subcomments(self):
+        return Comment.objects.filter(parent_comment=self)
+
+    def count_likes(self):
+        return self.like_set.count()
+
+    def count_subcomments(self):
+        return self.comment_set.count()
+
+    def user_has_liked_comment(self, user):
+        return self.like_set.filter(user=user).exists()
 
 
 class Like(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey("user.CustomUser",
+                             on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     like_date = models.DateTimeField(auto_now_add=True)

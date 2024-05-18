@@ -12,11 +12,15 @@
         {% if page_obj %}
         {% for post in page_obj %}
         <div class="col-md-4">
-            <div class="card mb-4 rounded">
+            <div class="card mb-4 rounded" style="height: 208.857px; width: 414.857px;">
                 <div class="card-body text-center d-flex flex-column justify-content-center post-result-container">
-                    <h5 class="card-title align-self-center" style="min-height: 75px;">{{ post.title }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Escrito por {{ post.author }} hace
-                        {{post.publication_date|timesince}}</h6>
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <h5 class="card-title align-self-center">{{ post.title }}</h5>
+                        <p class="card-subtitle mb-1 mt-1 text-muted">Por <a href="{% url 'social' post.author %}"
+                                class="social_link">{{ post.author }}</a></p>
+                        <h6 class="card-subtitle mb-1 mt-1 text-muted">Escrito hace {{post.publication_date|timesince}}
+                        </h6>
+                    </div>
                     <a href="{% url 'post-details' post_id=post.id %}" class="btn btn-primary">Ver post</a>
                 </div>
             </div>

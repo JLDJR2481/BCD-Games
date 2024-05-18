@@ -2,50 +2,102 @@
 {% load static %}
 
 {% block title %}Editar perfil{% endblock %}
+
 {% block content %}
 {% block navbar %}
 {% include "navbars/navbar.html" %}
 {% endblock navbar %}
+
+
 <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="text-center">Editar perfil</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+    <h1 class="text-center mb-4">Editar perfil</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
                 <div class="mb-3">
-                    <div class="col-12 d-flex justify-content-center">
-                        {% if user.profile_avatar %}
-                        <img id="output" src="{{ user.profile_avatar.url }}" width="300" class="mb-3">
+                    <div class="d-flex justify-content-center flex-column align-items-center">
+                        {% if user.userimage.image %}
+                        <h2 class="text-center">Avatar</h2>
+                        <img id="output" src="/media/{{ user.userimage.image }}" width="300px" height="300px"
+                            class="mb-3">
                         {% else %}
-                        <img id="output" width="300" class="mb-3">
+                        <img id="output" src="{% static 'images/default-avatar.png'%}" width="300px" height="300px"
+                            class="mb-3" style="border: none">
                         {% endif %}
+                        <button type="button" class="btn btn-primary d-flex justify-content-center"
+                            data-bs-toggle="modal" data-bs-target="#avatarModal">Seleccionar avatar</button>
+                        <input type="hidden" id="avatar" name="avatar">
                     </div>
-                    <label for="profile_avatar" class="btn btn-primary d-flex justify-content-center">Seleccionar
-                        archivo</label>
-                    <input type="file" class="form-control-file" id="profile_avatar" name="profile_avatar"
-                        onchange="loadFile(event)" style="display: none;">
                 </div>
+            </div>
+            <div class="col-md-6">
                 <div class="mb-3">
                     <label for="username" class="form-label">Nombre de usuario</label>
                     <input type="text" class="form-control" id="username" name="username" value="{{user.username}}"
                         required>
                 </div>
-                <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            </form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required>
+                </div>
+                <div>
+                    <h4 class="text-center">Cambiar contraseña</h4>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Antigua contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">Nueva contraseña</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Confirmar nueva contraseña</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">
+                        Guardar cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="avatarModalLabel">Seleccionar avatar</h5>
+                <button type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {% for avatar in avatars %}
+                    <div class="col-6 mb-3 d-flex justify-content-center">
+                        <img src="{{ avatar }}" class="avatar-option img-fluid" onclick="selectAvatar(this)"
+                            style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">
+                    </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
 <script>
-    var loadFile = function (event) {
+    function selectAvatar(img) {
         var output = document.getElementById('output');
-        output.src = URL.createObjectURL(event.target.files[0]);
-        output.onload = function () {
-            URL.revokeObjectURL(output.src) // liberar memoria
-        }
-    };
+        var avatar = document.getElementById('avatar');
+        output.src = img.src;
+        avatar.value = img.src;
+        $('#avatarModal').modal('hide');
+    }
 </script>
+
 {% endblock %}

@@ -3,6 +3,7 @@
 
 {% block title %}Post{% endblock %}
 
+
 {% block content %}
 {% block navbar %}
 {% include "navbars/navbar-post.html" %}
@@ -11,17 +12,47 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 text-center">
-            {% if author.profile_avatar %}
-            <img src="{{ author.profile_avatar.url }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
+            {% if author.userimage.image %}
+            <img src="/media/{{ author.userimage.image }}" class="rounded-circle" alt="Profile Avatar" width="25%" />
             {% endif %}
-            <p class="mt-2">Escrito por {{ author.username }}</p>
+            <p class=" mt-2">Escrito por <a href="{% url 'social' author.username %}">{{ author.username }}.</a></p>
+            <p class=" text-muted">Videojuego: <a href="{% url 'details' game.id %}">{{game.name}}</a></p>
 
+            <div>
+                <div>Compartir en: </div>
+                <div>
+                    <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}:%20{{ post.content|truncatewords:20|urlencode }}%20http://{{ request.get_host }}{{ request.path }}"
+                        class="btn btn-primary btn-sm" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-twitter" viewBox="0 0 16 16">
+                            <path
+                                d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334q.002-.211-.006-.422A6.7 6.7 0 0 0 16 3.542a6.7 6.7 0 0 1-1.889.518 3.3 3.3 0 0 0 1.447-1.817 6.5 6.5 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.32 9.32 0 0 1-6.767-3.429 3.29 3.29 0 0 0 1.018 4.382A3.3 3.3 0 0 1 .64 6.575v.045a3.29 3.29 0 0 0 2.632 3.218 3.2 3.2 0 0 1-.865.115 3 3 0 0 1-.614-.057 3.28 3.28 0 0 0 3.067 2.277A6.6 6.6 0 0 1 .78 13.58a6 6 0 0 1-.78-.045A9.34 9.34 0 0 0 5.026 15" />
+                        </svg>
+                    </a>
+                    <a href="https://wa.me/?text=Mira este post {{request.build_absolute_uri|urlencode}}"
+                        class="btn btn-primary btn-sm d-sm-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-whatsapp" viewBox="0 0 16 16">
+                            <path
+                                d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                        </svg>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}&amp;src=sdkpreparse"
+                        class="btn btn-primary btn-sm" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-facebook" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
             <div class="d-flex justify-content-center align-items-center">
                 <div class="text-muted mt-1 col-sm-3" style="padding-left: 10px;">Publicado hace
                     {{ post.publication_date|timesince }}
                 </div>
-                {% if post.last_update_date %}
-                <div class="text-muted mt-1 col-sm-3">Actualizado hace {{post.last_update_date|timesince}} </div>
+                {% if post_last_update_date %}
+                <div class="text-muted mt-1 col-sm-3">Actualizado hace {{post_last_update_date|timesince}} </div>
                 {% endif %}
             </div>
             <div class="d-flex justify-content-around align-items-center">
@@ -46,75 +77,259 @@
             {% if post.visual_content %}
             <img src="{{ post.visual_content.url }}" class="img-fluid mx-auto d-block" alt="Post Image" width="50%" />
             {% endif %}
-            <p class="mt-4">{{ post.content }}</p>
+            <pre style="white-space: pre-wrap;" class="mt-4">{{ post.content }}</pre>
         </div>
 
         <div class="col-12 mt-3">
-            <h3>Comentarios ({{comments_count}})</h3>
+            <h3>Comentarios totales: {{comments_count}}</h3>
+            <hr>
             <div class="row mt-2">
                 <div class="col-12">
                     {% for comment in comments %}
-                    <div class="row border">
+                    <div class="row" id="comment_{{comment.id}}">
                         <div class="col-2 d-flex flex-column justify-content-center align-items-center mt-2">
                             {% if comment.user.id is author.id %}
                             <p style="font-size: 12px; margin-bottom: 5px; font-weight: bolder;">
-                                {{ comment.user.username }} (Autor del post)</p>
+                                <a class="comment_social_url"
+                                    href="{% url 'social' comment.user.username %}">{{comment.user.username}}</a> (Autor
+                                del post)</p>
                             {% else %}
-                            <p style="font-size: 12px; margin-bottom: 5px;">{{ comment.user.username }}</p>
+                            <p style="font-size: 12px; margin-bottom: 5px;">
+                                <a class="comment_social_url"
+                                    href="{% url 'social' comment.user.username %}">{{ comment.user.username }}</a></p>
                             {% endif %}
-                            {% if comment.user.profile_avatar and comment.user.profile_avatar.file %}
-                            <img src="{{comment.user.profile_avatar.url}}" alt="User Logo"
+                            {% if comment.user.userimage.image %}
+                            <img src="/media/{{comment.user.userimage.image}}" alt="User Logo"
                                 style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
                             {% else %}
                             <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
                                 style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
 
                             {% endif %}
-                            <p style="font-size: 12px; margin-top: 5px;">{{ comment.comment_date|timesince }}</p>
-                        </div>
-                        <div class="col-10 d-flex justify-content-center flex-column">
-                            <p>{{ comment.content }}</p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <div class=" row mt-2">
-                        <div class="col-12">
-                            {% if user.is_authenticated %}
-                            <form action="{% url 'post-comment' post.id %}" method="POST">
-                                {% csrf_token %}
-                                <div class="form-group row">
-                                    <div class="col-sm-2 d-flex justify-content-center align-items-center">
-                                        <label for="comment">
-                                            {% if user.profile_avatar and user.profile_avatar.file %}
-                                            <img src="{{user.profile_avatar.url}}" alt="User Logo"
-                                                style="width: 50px; height: 50px; border-radius: 50%;"
-                                                id="profileAvatar">
-
-                                            {% else %}
-                                            <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
-                                                style="width: 50px; height: 50px; border-radius: 50%;"
-                                                id="profileAvatar">
-
-                                            {% endif %}
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-8 d-flex justify-content-center align-items-center">
-                                        <textarea class="form-control" id="comment" name="comment" rows="1"
-                                            placeholder="Escribe un comentario" required minlength="10"></textarea>
-                                    </div>
-                                    <div class="col-sm-2 d-flex justify-content-center align-items-center">
-                                        <button type="submit" class="btn btn-primary">Comentar</button>
-                                    </div>
-                                </div>
-                            </form>
-                            {% else %}
-                            <p>Para comentar, <a href="{% url 'login' %}?next={{ request.path }}">inicia sesión</a></p>
+                            <p style="font-size: 12px; margin-top: 5px;">Hace {{ comment.comment_date|timesince }}</p>
+                            {% if comment.last_update %}
+                            <p style="font-size: 12px; margin-top: 5px;">Última actualización hace
+                                {{ comment.last_update|timesince }}</p>
                             {% endif %}
                         </div>
+                        <div class="col-10 d-flex justify-content-center flex-column">
+                            <pre>{{ comment.content|wordwrap:150 }}</pre>
+                            <div class="row mb-4" style="width: 1185.710px; height: 37.143;px">
+                                <div class="col-2 d-flex justify-content-start">
+                                    <div class="col-2 d-flex justify-content-end align-items-center">
+                                        {{ comment.likes_count }}
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-start align-items-center"
+                                        style="padding-bottom: 2px;">
+                                        <form action="{% url 'comment-like' comment.id %}" method="POST">
+                                            {% csrf_token %}
+                                            {% if comment.id in user_liked_comments_id %}
+                                            <button type="submit" class="btn btn-sm .bg-transparent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="grey" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                                                </svg>
+                                            </button>
+                                            {% else %}
+                                            <button type="submit" class="btn btn-sm .bg-transparent" id="comment_like">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="grey" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2 2 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a10 10 0 0 0-.443.05 9.4 9.4 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a9 9 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.2 2.2 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.9.9 0 0 1-.121.416c-.165.288-.503.56-1.066.56z" />
+                                                </svg>
+                                            </button>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-8 d-flex justify-content-start">
+                                    <div class="col-1 d-flex justify-content-end align-items-center">
+                                        {{ comment.subcomments_count }}
+                                    </div>
+                                    <div class="col-1 d-flex justify-content-start align-items-center"
+                                        style="padding-bottom: 2px;">
+                                        <button type="button" id="subCommentButton{{forloop.counter}}" class="btn btn-sm
+                                            .bg-transparent">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey"
+                                                class="bi bi-chat" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-10 response-container" style="display: none;">
+                                        <form action="{%url 'subcomment' comment.id %}" method="POST"
+                                            class="w-100 d-flex">
+                                            {% csrf_token %}
+                                            <div class="input-group">
+                                                <textarea id="subCommentTextArea{{ forloop.counter }}"
+                                                    class="form-control" placeholder="Responder comentario" rows="1"
+                                                    cols="10" required minlength="10" name="comment"></textarea>
+                                                <button type="submit" id="subCommentSubmit{{ forloop.counter }}"
+                                                    class="btn btn-sm btn-primary d-flex justify-content-center align-items-center"
+                                                    value="Responder" style="margin-right: 10px">Responder</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% if comment.user.id is user.id%}
+                                <div class="col-2 d-flex" style="justify-content: space-around;">
+                                    <a href="{% url 'edit-comment' comment.id %}"
+                                        class="col-4 d-flex align-items-center justify-content-center btn btn-primary">Editar</a>
+                                    <a href="{% url 'delete-comment' comment.id %}" class="col-4 d-flex align-items-center
+                                        justify-content-center btn btn-danger">Eliminar</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    {% for subcomment in subcomments %}
+                    {% if subcomment.parent_comment.id == comment.id %}
+                    <div class="row" style="padding-left: 40px; font-size: 12px;" id="comment_{{subcomment.id}}">
+                        <div class="col-2 d-flex flex-column justify-content-center align-items-center mt-2">
+                            {% if subcomment.user.id is author.id %}
+                            <p style="font-size: 12px; margin-bottom: 12px; font-weight: bolder;">
+                                <a class="comment_social_url"
+                                    href="{% url 'social' subcomment.user.username %}">{{ subcomment.user.username }}
+                                </a>(Autor del post)</p>
+                            {% else %}
+                            <p style="font-size: 12px; margin-bottom: 5px;">
+                                <a class="comment_social_url" href="{% url 'social' subcomment.user.username %}">
+                                    {{ subcomment.user.username }}</a></p>
+                            {% endif %}
+                            {% if subcomment.user.userimage.image %}
+                            <img src="/media/{{subcomment.user.userimage.image}}" alt="User Logo"
+                                style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
+                            {% else %}
+                            <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
+                                style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
+                            {% endif %}
+                            <p style="font-size: 12px; margin-top: 5px;">Hace
+                                {{ subcomment.comment_date|timesince }}
+                            </p>
+                            {% if subcomment.last_update %}
+                            <p style="font-size: 12px; margin-top: 5px">
+                                Última actualización hace {{ subcomment.last_update|timesince }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+                        <div class="col-10 d-flex justify-content-center flex-column">
+                            <p class="text-muted">Respuesta a <a class="response_comment_social_url"
+                                    href="{% url 'social' subcomment.parent_comment.user.username %}">{{subcomment.parent_comment.user.username}}</a>
+                            </p>
+                            <pre>{{ subcomment.content|wordwrap:150 }}</pre>
+                            <div class="row mb-4">
+                                <div class="col-10 d-flex justify-content-start">
+                                    <div class="col-2 d-flex justify-content-end align-items-center">
+                                        {{ subcomment.subcomment_likes }}
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-start align-items-center"
+                                        style="padding-bottom: 2px;">
+                                        <form action="{% url 'comment-like' subcomment.id %}" method="POST">
+                                            {% csrf_token %}
+                                            {% if subcomment.id in user_liked_comments_id %}
+                                            <button type="submit" class="btn btn-sm .bg-transparent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="grey" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                                                </svg>
+                                            </button>
+                                            {% else %}
+                                            <button type="submit" class="btn btn-sm .bg-transparent" id="comment_like">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="grey" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2 2 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a10 10 0 0 0-.443.05 9.4 9.4 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a9 9 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.2 2.2 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.9.9 0 0 1-.121.416c-.165.288-.503.56-1.066.56z" />
+                                                </svg>
+                                            </button>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                                {% if subcomment.user.id is user.id%}
+                                <div class="col-2 d-flex" style="justify-content: space-around;">
+                                    <a href="{% url 'edit-comment' subcomment.id %}"
+                                        class="col-4 d-flex align-items-center justify-content-center btn btn-primary">Editar</a>
+                                    <a href="{% url 'delete-comment' subcomment.id %}"
+                                        class="col-4 d-flex align-items-center justify-content-center btn btn-danger">Eliminar</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <div class=" row mt-2">
+                    <div class="col-12">
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'post-comment' post.id %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                                    <label for="comment">
+                                        {% if user.userimage.image %}
+                                        <img src="/media/{{user.userimage.image}}" alt="User Logo"
+                                            style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
+
+                                        {% else %}
+                                        <img src="{% static 'images/default-avatar.png' %}" alt="User Logo"
+                                            style="width: 50px; height: 50px; border-radius: 50%;" id="profileAvatar">
+
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-sm-8 d-flex justify-content-center align-items-center">
+                                    <textarea class="form-control" id="comment" name="comment" rows="1"
+                                        placeholder="Escribe un comentario" required minlength="10"></textarea>
+                                </div>
+                                <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                                    <button type="submit" class="btn btn-primary">Comentar</button>
+                                </div>
+                            </div>
+                        </form>
+                        {% else %}
+                        <p>Para comentar, <a href="{% url 'login' %}?next={{ request.path }}">inicia
+                                sesión</a></p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="comment_length" id="{{comments|length}}" style="display: none;">
+</div>
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let comments_length = document.querySelector('.comment_length').id;
+        for (let i = 1; i <= comments_length; i++) {
+            document.getElementById("subCommentButton" + i).addEventListener("click", function () {
+
+                let response_container = document.getElementById("subCommentButton" + i)
+                    .parentNode
+                    .parentNode.querySelector('.response-container')
+
+                if (response_container.style.display == "flex") {
+                    response_container.style.display = "none";
+                } else {
+                    response_container.style.display = "flex";
+                }
+            });
+        }
+    });
+</script>
 {% endblock content %}

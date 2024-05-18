@@ -1,0 +1,267 @@
+#dark {
+  transition: all 0.25s ease-in-out;
+  background-color: #1a1a1a;
+  color: #ffffff;
+
+  nav:not(#paginator) {
+    transition: all 0.25s ease-in-out;
+    background-color: #404040;
+    #navbarNav .nav-link {
+      color: #ffffff;
+    }
+  }
+
+  nav .page-link {
+    transition: all 0.25s ease-in-out;
+    background-color: #404040;
+    color: #ffffff;
+    span {
+      color: #ffffff;
+    }
+  }
+
+  button.accordion-button {
+    transition: all 0.25s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
+
+  div.accordion-item {
+    transition: all 0.25s ease-in-out;
+    background-color: #404040;
+    color: #ffffff;
+  }
+
+  #offcanvasUser {
+    background-color: #292929;
+    color: #ffffff;
+
+    .dropdown-item {
+      color: #ffffff;
+    }
+    .dropdown-item:hover,
+    .dropdown-item:focus,
+    .dropdown-item:active {
+      background-color: #292929;
+    }
+  }
+
+  .search-box input {
+    transition: all 0.25s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
+  #login-card,
+  #register-card {
+    transition: all 0.25s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
+
+  #login-button {
+    transition: all 0.25s ease-in-out;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  #login-button:hover,
+  #login-button:focus,
+  #login-button:active {
+    box-shadow: none;
+  }
+
+  #profileAvatar {
+    transition: all 0.25s ease-in-out;
+    border: 2px solid white;
+  }
+
+  #highScoreTable thead tr,
+  #highScoreTable tbody tr {
+    transition: all 0.25s ease-in-out;
+    background-color: #292929;
+    color: #ffffff;
+  }
+}
+#light {
+  transition: all 0.25s ease-in-out;
+  background-color: #f2f2f2;
+  color: #000000;
+
+  nav:not(#paginator) {
+    transition: all 0.25s ease-in-out;
+    background-color: #e8e8e8;
+    #navbarNav .nav-link {
+      color: #000000;
+    }
+  }
+
+  nav .page-link {
+    transition: all 0.25s ease-in-out;
+    background-color: #e8e8e8;
+    color: #000000;
+    span {
+      color: #000000;
+    }
+  }
+
+  button.accordion-button {
+    transition: all 0.25s ease-in-out;
+    background-color: #e8e8e8;
+    color: #000000;
+  }
+
+  div.accordion-item {
+    transition: all 0.25s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+    border: solid 1px #000000;
+  }
+
+  #login-button {
+    transition: all 0.25s ease-in-out;
+    color: #000000;
+    cursor: pointer;
+  }
+  #login-button:hover,
+  #login-button:focus,
+  #login-button:active {
+    box-shadow: none;
+  }
+
+  #offcanvasUser {
+    background-color: #e8e8e8;
+
+    .dropdown-item {
+      color: #000000;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus,
+    .dropdown-item:active {
+      background-color: #e8e8e8;
+    }
+  }
+  .search-box input {
+    transition: all 0.25s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+
+  #login-card,
+  #register-card {
+    transition: all 0.25s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+
+  #profileAvatar {
+    transition: all 0.25s ease-in-out;
+    border: 2px solid black;
+  }
+
+  #highScoreTable thead tr,
+  #highScoreTable tbody tr {
+    transition: all 0.25s ease-in-out;
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+}
+
+nav {
+  #navbarNav .nav-link {
+    font-size: 1.2em;
+  }
+}
+
+.alert.alert-info {
+  background-color: #ff6666;
+  color: #ffffff;
+  border: solid 1px #ff6666;
+}
+
+.accordion-button::after {
+  display: none;
+}
+
+.post-result-container,
+.game-result-container {
+  background-color: #bac78c;
+  color: #1a1a1a;
+
+  a,
+  a:hover {
+    background-color: #5a7c7d;
+    border-color: #5a7c7d;
+  }
+}
+
+h2.accordion-header > button {
+  font-weight: bolder;
+}
+
+#darkModeToggle:focus,
+.accordion-button:focus,
+#canvasButton:focus {
+  box-shadow: 0 0 0 0;
+}
+
+.search-box {
+  position: relative;
+  margin: 20px auto;
+  width: 50%;
+  max-width: 500px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  background-color: #5a7c7d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-box button:hover {
+  background-color: #5a7c7d;
+}
+
+.login-button {
+  background-color: #5a7c7d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+p label {
+  font-weight: bolder;
+  display: block;
+  margin-bottom: 5px;
+}
+
+p input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+p span {
+  font-size: 0.8em;
+}
+
+.nav-item.active {
+  font-weight: bolder;
+}
