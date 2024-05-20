@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'gamesPosts',
     'game',
     'user',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("SMTP_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASS")
 DEFAULT_FROM_EMAIL = "bcd.games2001@gmail.com"
+
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+}

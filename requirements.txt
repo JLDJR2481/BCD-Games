@@ -1,9 +1,12 @@
 asgiref==3.8.1
 Django==5.0.6
+django-extensions==3.2.3
 dnspython==2.6.1
 mysqlclient==2.2.4
 pillow==10.3.0
+pydot==2.0.0
 pymongo==4.7.2
+pyparsing==3.1.2
 python-dotenv==1.0.1
 redis==5.0.4
 sqlparse==0.5.0
