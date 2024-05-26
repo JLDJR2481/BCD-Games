@@ -22,7 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # En caso de no tener una secret key en el archivo .env, se puede comentar la línea de arriba y descomentar la de abajo
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECRET_KEY= "django-insecure-60u!b)(k=(pc+68e&g%7#w2kdpzy(()c!%&&%dh*xv4!+wyx-u"
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
