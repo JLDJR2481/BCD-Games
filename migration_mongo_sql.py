@@ -1,7 +1,6 @@
 import dotenv
 from pymongo import MongoClient
 from searchEngine.models import Game
-from datetime import datetime
 
 # Script para lanzar en la terminal de Django (py manage.py shell) que permite interactuar en los juegos guardados en un cliente MongoDB en Docker y pasarlo al ORM de Django (en este caso, en SQLite3)
 
