@@ -1,5 +1,7 @@
 # BCD-Games
 
+![Logo](static/images/logotipo.png)
+
 ## índice
 
 1. [Introducción](#introducción)
