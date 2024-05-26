@@ -168,8 +168,7 @@ pip install -r requirements.txt
 - REDIS_USER: Usuario de Redis para acceder a la base de datos
 - REDIS_PASSWORD: Contraseña del usuario de Redis
 
-- SECRET_KEY: Se trata de la clave que otorga Django para el funcionamiento de la aplicación. En este proyecto, se ha dejado 2 formas de poder obtener la SECRET_KEY
-
+- SECRET_KEY: Se trata de la clave que otorga Django para el funcionamiento de la aplicación.
 - SMTP_USER: Email que se utilizará para el servicio de mail de Google
 - SMTP_PASS: Contraseña del email
 - SMTP_APP_PASS: Clave de aplicación otorgada por Google para utilizar de forma correcta la aplicación.
