@@ -19,7 +19,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# En caso de no tener una secret key en el archivo .env, se puede comentar la línea de arriba y descomentar la de abajo
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# SECRET_KEY= "django-insecure-60u!b)(k=(pc+68e&g%7#w2kdpzy(()c!%&&%dh*xv4!+wyx-u"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -151,9 +155,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("SMTP_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASS")
 DEFAULT_FROM_EMAIL = "bcd.games2001@gmail.com"
-
-
-GRAPH_MODELS = {
-    'all_applications': True,
-    'group_models': True,
-}
