@@ -173,7 +173,18 @@ pip install -r requirements.txt
 - SMTP_PASS: Contraseña del email
 - SMTP_APP_PASS: Clave de aplicación otorgada por Google para utilizar de forma correcta la aplicación.
 
-4. Ejecuta el servidor de Django mediante el siguiente comando en la raíz del proyecto
+4. Realiza las migraciones para crear la base de datos con el siguiente comando en la raíz del proyecto:
+```bash
+python manage.py migrate
+```
+
+5. Abre el terminal de Django con el comando y, copiando y pegando el código en la misma, ejecuta el script para rellenar los videojuegos. Para salir, recuerda escribir exit() dentro de la terminal:
+```bash
+python manage.py shell
+```
+
+
+6. Ejecuta el servidor de Django mediante el siguiente comando en la raíz del proyecto
 
 ```bash
 python manage.py runserver
