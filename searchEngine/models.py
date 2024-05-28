@@ -5,7 +5,7 @@ from gamesPosts.models import Post
 
 
 class Game(models.Model):
-    game_id = models.IntegerField()
+    game_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=255, db_index=True)
     translated_description_es = models.TextField()
     metacritic = models.IntegerField(null=True)
